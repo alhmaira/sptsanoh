@@ -9,7 +9,6 @@ class Delivery extends Model
     protected $table = 'delivery';
 
     protected $fillable = [
-
         'docNumber',
         'supplierSearch',
         'createdOn',
@@ -22,7 +21,10 @@ class Delivery extends Model
         'del_method',
         'premium',
         'dps',
+        'problems',
+        'has_problem',
         'total_score',
-        'updatedBy'
+        'updatedBy',
+        'createdBy',
     ];
 }

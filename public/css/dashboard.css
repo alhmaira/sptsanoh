@@ -1,5 +1,5 @@
 /* GLOBAL FONT */
-body{
+* {
     font-family: "Outfit", sans-serif;
 }
 
@@ -140,6 +140,75 @@ option{
     width:100%;
 }
 
+.filter-box select,
+.dropdown input{
+    min-width:190px;
+    height:48px;
+
+    padding:0 16px;
+
+    border:1px solid #d7dde8;
+    border-radius:14px;
+
+    background:#fff;
+
+    font-size:14px;
+    font-weight:500;
+    color:#374151;
+
+    box-sizing:border-box;
+
+    transition:.2s ease;
+}
+
+.filter-box select:focus,
+.dropdown input:focus{
+
+    outline:none;
+    border-color:#2d5fde;
+    box-shadow:0 0 0 3px rgba(45,95,222,.15);
+
+}
+
+ /* =========================================================
+   SEARCHABLE DROPDOWN
+========================================================= */
+.dropdown{
+    position:relative;
+    min-width:190px;
+}
+
+.dropdown-list{
+    position:absolute;
+    top:52px;
+    left:0;
+
+    width:100%;
+
+    max-height:280px;
+    overflow-y:auto;
+
+    background:#fff;
+
+    border:1px solid #d7dde8;
+    border-radius:14px;
+
+    box-shadow:0 12px 28px rgba(0,0,0,.08);
+
+    display:none;
+    z-index:999;
+}
+
+.dropdown-list div{
+    padding:12px 16px;
+    font-size:14px;
+}
+
+.dropdown-list div:hover{
+    background:#f5f8ff;
+    color:#2d5fde;
+}
+
 /* =========================
    TOPBAR
 ========================= */
@@ -151,14 +220,6 @@ option{
     margin-bottom:25px;
     gap:20px;
     width:100%;
-}
-
-.topbar-left{
-    display:flex;
-    gap:15px;
-    align-items:center;
-    flex-wrap:wrap;
-    flex:1;
 }
 
 .topbar-right{
@@ -175,6 +236,14 @@ option{
     white-space:nowrap;
     margin:0;
 }
+
+.topbar-left{
+    display:flex;
+    align-items:flex-end;
+    gap:16px;
+    flex-wrap:wrap;
+}
+
 .filter-box{
     display:flex;
     flex-direction:column;
@@ -182,25 +251,9 @@ option{
 }
 
 .filter-box label{
+    height:15px;
     font-size:13px;
     font-weight:600;
-    color:#374151;
-}
-
-.filter-box select{
-    min-width:170px;
-    padding:12px 14px;
-    border-radius:12px;
-    border:1px solid #d1d5db;
-    background:#fff;
-    outline:none;
-    font-size:14px;
-    transition:0.2s;
-}
-
-.filter-box select:focus{
-    border-color:#2d5fde;
-    box-shadow:0 0 0 3px rgba(45,95,222,0.15);
 }
 
 /* =========================

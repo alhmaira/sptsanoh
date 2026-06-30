@@ -43,10 +43,18 @@ href="{{ asset('css/changepassword.css') }}">
 
                 <input type="password"
                        name="password"
+                       id="password"
                        placeholder="Enter new password"
                        required>
 
-                <i class="fa-solid fa-lock"></i>
+                <button type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('password', 'passwordIcon')">
+
+                    <i class="fa-solid fa-lock"
+                       id="passwordIcon"></i>
+
+                </button>
 
             </div>
 
@@ -67,10 +75,18 @@ href="{{ asset('css/changepassword.css') }}">
 
                 <input type="password"
                        name="password_confirmation"
+                       id="password_confirmation"
                        placeholder="Confirm password"
                        required>
 
-                <i class="fa-solid fa-lock"></i>
+                <button type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('password_confirmation', 'confirmPasswordIcon')">
+
+                    <i class="fa-solid fa-lock"
+                       id="confirmPasswordIcon"></i>
+
+                </button>
 
             </div>
 
@@ -86,6 +102,40 @@ href="{{ asset('css/changepassword.css') }}">
     </form>
 
 </div>
+
+<script>
+
+/* =========================
+   SHOW / HIDE PASSWORD
+========================= */
+
+function togglePassword(inputId, iconId){
+
+    const input =
+        document.getElementById(inputId);
+
+    const icon =
+        document.getElementById(iconId);
+
+    if(input.type === "password"){
+
+        input.type = "text";
+
+        icon.classList.remove("fa-lock");
+
+        icon.classList.add("fa-lock-open");
+
+    }else{
+
+        input.type = "password";
+
+        icon.classList.remove("fa-lock-open");
+
+        icon.classList.add("fa-lock");
+    }
+}
+
+</script>
 
 </body>
 </html>

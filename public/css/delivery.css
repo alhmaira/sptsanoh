@@ -1,14 +1,7 @@
-/* =========================================================
-   BASE
-========================================================= */
-
-body {
+* {
     font-family: "Outfit", sans-serif;
 }
 
-/* =========================================================
-   BASE
-========================================================= */
 .pagination {
     margin-top: 12px;
     display: flex;
@@ -306,7 +299,7 @@ option {
     border: none;
     border-radius: 12px;
 
-    background: linear-gradient(135deg, #1a3a8f, #2d5fde);
+    background: linear-gradient(135deg, #2d5fde);
 
     color: white;
 
@@ -555,4 +548,103 @@ ul {
     .total-num {
         font-size: 38px;
     }
+}
+
+/* =========================================================
+   PROBLEM
+========================================================= */
+.problem-container{
+grid-column: 1 / -1;
+width:100%;
+max-width:100%;
+margin-top:8px;
+align-self:start;
+}
+
+.problem-item{
+width:100%;
+background:#fff;
+border:1px solid #e6ebf3;
+border-radius:12px;
+padding:14px;
+margin-bottom:12px;
+box-sizing:border-box;
+}
+
+.problem-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:12px;
+    row-gap:6px;
+}
+
+.problem-field label{
+    margin-bottom:2px;
+}
+
+.problem-field label{
+margin-bottom:6px;
+font-size:13px;
+font-weight:600;
+color:#4b5563;
+}
+
+.problem-field input,
+.problem-field textarea{
+    width:100%;
+    height:34px;
+    padding:6px 10px;
+    border:1px solid #d8dee9;
+    border-radius:8px;
+    font-size:13px;
+    font-family:"Outfit",sans-serif;
+    box-sizing:border-box;
+    transition:.2s;
+    background:#fff;
+}
+
+.problem-field textarea{
+min-height:70px;
+resize:vertical;
+}
+
+.problem-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:6px;
+}
+
+.problem-header label{
+margin:0;
+}
+
+.delete-problem-btn{
+border:none;
+background:transparent;
+padding:2px;
+font-size:15px;
+color:#9ca3af;
+cursor:pointer;
+transition:.2s;
+}
+
+.delete-problem-btn:hover{
+color:#4b5563;
+}
+
+.add-problem-btn{
+margin-top:4px;
+padding:0;
+border:none;
+background:none;
+font-size:13px;
+font-weight:600;
+color:#7b8794;
+cursor:pointer;
+transition:.2s;
+}
+
+.add-problem-btn:hover{
+color:#374151;
 }

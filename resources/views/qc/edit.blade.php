@@ -73,6 +73,7 @@
         </div>
 
         <div class="form-grid">
+
             <div class="input-group">
                 <label>FPPK</label>
                 <select name="fppk" id="fppk" onchange="calcQC()">
@@ -83,9 +84,56 @@
             </div>
 
             <div class="input-group">
-                <label>Total Score</label>
-                <input type="text" id="total_score" name="total_score" value="{{ $qc->total_score }}" readonly>
+
+                <label>Quality Problem</label>
+
+                <div class="radio-group">
+
+                    <label>
+                        <input type="radio"
+                            name="has_problem"
+                            value="yes"
+                            {{ $qc->has_problem == 'yes' ? 'checked' : '' }}
+                            onchange="toggleQCProblem()">
+                        Yes
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                            name="has_problem"
+                            value="no"
+                            {{ $qc->has_problem != 'yes' ? 'checked' : '' }}
+                            onchange="toggleNoQCProblem()">
+                        No
+                    </label>
+
+                </div>
+
             </div>
+
+            <div id="qc-problem-container" class="problem-container" style="display:none; grid-column:1/-1;">
+                <div id="qc-problem-list"></div>
+
+                <button type="button"
+                        class="add-problem-btn"
+                        onclick="addQCProblemRow()">
+                    + Add Problem
+                </button>
+            </div>
+
+        </div>
+
+        <div class="form-grid">
+
+            <div class="input-group" style="grid-column:1/-1;">
+                <label>Total Score</label>
+                <input type="text"
+                    id="total_score"
+                    name="total_score"
+                    value="{{ $qc->total_score }}"
+                    readonly>
+            </div>
+
         </div>
 
         <div style="display:flex; gap:12px; margin-top:20px;">
@@ -131,6 +179,97 @@ function calcQC() {
 }
 
 calcQC();
+
+let qcProblemIndex = 0;
+
+function toggleQCProblem(){
+
+    document.getElementById("qc-problem-container").style.display = "block";
+
+    if(document.getElementById("qc-problem-list").children.length === 0){
+        addQCProblemRow();
+    }
+
+}
+
+function toggleNoQCProblem(){
+
+    document.getElementById("qc-problem-container").style.display = "none";
+    document.getElementById("qc-problem-list").innerHTML = "";
+    qcProblemIndex = 0;
+
+}
+
+function addQCProblemRow(){
+
+    const html=`
+    <div class="problem-item">
+
+        <div class="problem-row">
+
+            <div class="problem-field">
+                <label>Part No</label>
+                <input type="text"
+                       name="qualityProblems[${qcProblemIndex}][partNo]">
+            </div>
+
+            <div class="problem-field">
+
+                <div class="problem-header">
+
+                    <label>Part Name</label>
+
+                    <button type="button"
+                            class="delete-problem-btn"
+                            onclick="this.closest('.problem-item').remove()">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+
+                </div>
+
+                <input type="text"
+                    name="qualityProblems[${qcProblemIndex}][partName]">
+
+            </div>
+
+            <div class="problem-field">
+                <label>Delivery</label>
+                <input type="text"
+                       name="qualityProblems[${qcProblemIndex}][delivery]">
+            </div>
+
+            <div class="problem-field">
+                <label>NG</label>
+                <input type="text"
+                       name="qualityProblems[${qcProblemIndex}][ng]">
+            </div>
+
+            <div class="problem-field" style="grid-column:1/-1;">
+                <label>Problem</label>
+                <textarea
+                    name="qualityProblems[${qcProblemIndex}][problem]"></textarea>
+            </div>
+
+        </div>
+
+    </div>`;
+
+    document.getElementById("qc-problem-list")
+        .insertAdjacentHTML("beforeend",html);
+
+    qcProblemIndex++;
+
+}
+
+window.onload = function () {
+    calcQC();
+    if(document.querySelector('input[name="has_problem"]:checked')?.value === "yes"){
+        toggleQCProblem();
+    }else{
+        toggleNoQCProblem();
+    }
+}
+
 </script>
 @endpush
 

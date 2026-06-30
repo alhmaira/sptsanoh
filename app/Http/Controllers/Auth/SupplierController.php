@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Http;
 
@@ -25,4 +25,5 @@ class SupplierController extends Controller
             $response->json()['data']
         );
     }
+
 }

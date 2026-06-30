@@ -7,41 +7,120 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+
     public function index()
     {
-        $qcData = DB::table('qc')->get();
+        return view('report');
+    }
 
-        $deliveryData = DB::table('delivery')->get();
 
-        $approvalData = DB::table('approvals')
-            ->where('status', 'APPROVED')
+
+    public function data(Request $request)
+    {
+
+        $query = DB::table('approval_histories as h')
+
+            ->join('qc as q', 
+                'h.doc_number', 
+                '=', 
+                'q.docNumber'
+            )
+
+            ->join('delivery as d',
+                'h.doc_number',
+                '=',
+                'd.docNumber'
+            )
+
+            ->where('h.role_name','General Manager')
+
+            ->where('h.department','Production')
+
+            ->where('h.action','APPROVED');
+
+
+
+        if($request->filled('supplier')){
+
+            $query->where(
+                'q.supplier',
+                $request->supplier
+            );
+
+        }
+
+
+
+        if($request->filled('month')){
+
+            $query->where(
+                'q.del_month',
+                $request->month
+            );
+
+        }
+
+
+
+        if($request->filled('year')){
+
+            $query->where(
+                'q.del_year',
+                $request->year
+            );
+
+        }
+
+
+        $data = $query
+
+            ->select(
+
+                'q.docNumber as doc_number',
+
+                'q.supplier',
+
+                'q.del_month',
+
+                'q.del_year',
+
+                'q.total_score as qc_score',
+
+                'd.total_score as delivery_score'
+
+            )
+
+            ->distinct()
+
             ->get();
 
-        $historyData = DB::table('approval_histories')
-            ->get()
-            ->map(function ($h) {
 
-                $user = DB::table('users')
-                    ->where('name', $h->user_name)
-                    ->first();
 
-                return [
-                    'doc_number'     => $h->doc_number,
-                    'user_name'      => $h->user_name,
-                    'role'           => $h->role_name,
-                    'department'     => $h->department,
-                    'action'         => $h->action,
-                    'signature_path' => $user && $user->signature
-                        ? asset('storage/' . $user->signature)
-                        : null,
-                ];
-            });
 
-        return view('report', [
-            'qcData'       => $qcData,
-            'deliveryData' => $deliveryData,
-            'approvalData' => $approvalData,
-            'historyData'  => $historyData,
-        ]);
+
+        $data->transform(function($row){
+
+
+            $row->final_score = round(
+
+                ($row->qc_score + $row->delivery_score) / 2,
+
+                2
+
+            );
+
+
+            return $row;
+
+
+        });
+
+
+
+
+        return response()->json($data);
+
     }
+
+
 }

@@ -15,51 +15,36 @@
         Delivery Data
     </div>
 
+    <div id="syncStatus"
+        style="
+            display:none;
+            margin-bottom:15px;
+            padding:10px;
+            border-radius:6px;">
+    </div>
+
     <div class="grid2">
 
         {{-- SUPPLIER --}}
         <div class="field">
-
-    <label>Supplier</label>
-
-    <div class="dropdown">
-
-        <input type="text"
-               id="supplierSearch"
-               placeholder="Search Supplier..."
-               onclick="toggleSupplierDropdown()"
-               onkeyup="filterSuppliers()">
-
-        <div id="supplierDropdown"
-             class="dropdown-list">
+            <label>Supplier</label>
+            <div class="dropdown">
+                <input type="text" id="supplierSearch" placeholder="Search Supplier..." onclick="toggleSupplierDropdown()" onkeyup="filterSuppliers()">
+                <div id="supplierDropdown" class="dropdown-list"></div>
+            </div>
         </div>
-
-    </div>
-
-</div>
 
         {{-- CREATED --}}
         <div class="field">
-
             <label>Created On</label>
-
-            <input type="text"
-                   id="created-on"
-                   readonly>
-
+            <input type="text" id="created-on" readonly>
         </div>
 
         {{-- MONTH --}}
         <div class="field">
-
             <label>Month</label>
-
-            <select id="del-month">
-
-                <option value="">
-                    Select Month
-                </option>
-
+            <select id="del-month" onchange="periodChanged()">
+                <option value="">Select Month</option>
                 <option value="01">January</option>
                 <option value="02">February</option>
                 <option value="03">March</option>
@@ -72,154 +57,93 @@
                 <option value="10">October</option>
                 <option value="11">November</option>
                 <option value="12">December</option>
-
             </select>
-
         </div>
 
         {{-- YEAR --}}
         <div class="field">
-
             <label>Year</label>
-
-            <select id="del-year"></select>
-
+            <select id="del-year" onchange="periodChanged()"></select>
         </div>
 
         {{-- OTD --}}
         <div class="field">
-
             <label>On-Time Delivery</label>
-
-            <select id="otd"
-                    onchange="calc()">
-
-                <option value="">
-                    Select status
-                </option>
-
-                <option value="0">
-                    No Delay
-                </option>
-
-                <option value="2">
-                    Delay 1 day
-                </option>
-
-                <option value="4">
-                    Delay 2 days
-                </option>
-
-                <option value="6">
-                    Delay 3 days
-                </option>
-
-                <option value="10">
-                    Delay > 3 days
-                </option>
-
+            <select id="otd" disabled>
+                <option value="">Select status</option>
+                <option value="0">No Delay</option>
+                <option value="2">Delay 1 day</option>
+                <option value="4">Delay 2 days</option>
+                <option value="6">Delay 3 days</option>
+                <option value="10">Delay > 3 days</option>
             </select>
-
         </div>
 
         {{-- QTY ORDER --}}
         <div class="field">
-
             <label>Quantity Ordered</label>
-
-            <input type="number"
-                   id="qty-ord"
-                   oninput="calc()">
-
+            <input type="number" id="qty-ord" disabled>
         </div>
 
         {{-- QTY RECEIVED --}}
         <div class="field">
-
             <label>Quantity Received</label>
-
-            <input type="number"
-                   id="qty-rec"
-                   oninput="calc()">
-
+            <input type="number" id="qty-rec" disabled>
         </div>
 
         {{-- FULFILLMENT --}}
         <div class="field">
-
             <label>Order Fulfillment (%)</label>
-
-            <input type="text"
-                   id="fulfillment"
-                   readonly>
-
+            <input type="text" id="fulfillment" disabled>
         </div>
 
         {{-- DELIVERY METHOD --}}
         <div class="field">
-
             <label>Delivery Method</label>
-
-            <select id="del-method"
-                    onchange="calc()">
-
-                <option value="">
-                    Select method
-                </option>
-
-                <option value="0">
-                    Normal
-                </option>
-
-                <option value="4">
-                    Abnormal
-                </option>
-
+            <select id="del-method" onchange="calc()">
+                <option value="">Select method</option>
+                <option value="0">Normal</option>
+                <option value="4">Abnormal</option>
             </select>
-
         </div>
 
         {{-- PREMIUM --}}
         <div class="field">
-
             <label>Premium Freight (Rp)</label>
-
-            <input type="number"
-                   id="premium"
-                   oninput="calc()">
-
+            <input type="number" id="premium" oninput="calc()">
         </div>
 
         {{-- DPS --}}
         <div class="field">
-
             <label>DPS Reply</label>
-
-            <select id="dps"
-                    onchange="calc()">
-
-                <option value="">
-                    Select reply
-                </option>
-
-                <option value="0">
-                    No Problem
-                </option>
-
-                <option value="5">
-                    On Time
-                </option>
-
-                <option value="10">
-                    Delay
-                </option>
-
-                <option value="20">
-                    No Reply
-                </option>
-
+            <select id="dps" onchange="calc()">
+                <option value="">Select reply</option>
+                <option value="0">On Time</option>
+                <option value="10">Delay</option>
+                <option value="20">No Reply</option>
             </select>
+        </div>
 
+        {{-- DELIVERY PROBLEM --}}
+        <div class="field">
+            <label>Delivery Problem</label>
+            <div style="display:flex;align-items:center;gap:15px;">
+                <label style="display:flex;align-items:center;gap:6px;">
+                    <input type="radio" name="problem-status" id="has-problem" value="yes" onchange="toggleProblem()">
+                    Yes
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;">
+                    <input type="radio" name="problem-status" id="no-problem" value="no" onchange="toggleNoProblem()">
+                    No
+                </label>
+            </div>
+        </div>
+
+        <div id="problem-container" class="problem-container" style="display:none;">
+            <div id="problem-list"></div>
+            <button type="button" class="add-problem-btn" onclick="addProblemRow()">
+                + Add Problem
+            </button>
         </div>
 
     </div>
@@ -279,6 +203,7 @@
 
 let supplierData = [];
 let selectedSupplier = "";
+let problemData = [];
 
 console.log("DELIVERY PAGE LOADED");
 
@@ -301,6 +226,10 @@ const today = new Date();
 const currentMonth =
     String(today.getMonth() + 1).padStart(2, '0');
 
+    document.getElementById(
+        "del-month"
+    ).value = currentMonth;
+
 const currentDay =
     String(today.getDate()).padStart(2, '0');
 
@@ -313,9 +242,13 @@ const currentHour =
 const currentMinute =
     String(today.getMinutes()).padStart(2, '0');
 
-document.getElementById("created-on").value =
-`${currentMonth}/${currentDay}/${currentYear} ${currentHour}:${currentMinute}`;
+const currentSecond =
+    String(today.getSeconds()).padStart(2, '0');
 
+document.getElementById("created-on").value =
+`${currentMonth}/${currentDay}/${currentYear} ${currentHour}:${currentMinute}:${currentSecond}`;
+
+periodChanged();
 /* =========================
    YEAR INIT
 ========================= */
@@ -435,39 +368,232 @@ function calc(){
 /* =========================
    LOAD SUPPLIER
 ========================= */
+async function loadSupplierPeriod(){
 
-async function loadSuppliers(){
+    const month =
+        document.getElementById("del-month").value;
+
+    const year =
+        document.getElementById("del-year").value;
 
     try{
 
         const response =
-            await fetch('/api/suppliers');
+            await fetch(
+                '{{ route("delivery.performance.suppliers") }}',
+                {
+                    method:'POST',
 
-        const suppliers =
+                    headers:{
+                        'Content-Type':'application/json',
+                        'Accept':'application/json',
+                        'X-CSRF-TOKEN':
+                            '{{ csrf_token() }}'
+                    },
+
+                    body: JSON.stringify({
+                        month,
+                        year
+                    })
+                }
+            );
+
+        const result =
             await response.json();
 
-        supplierData = suppliers.filter(
-            s => s.bp_status_desc === "Active"
-        );
+        if(result.success){
 
-        buildSupplierDropdown(supplierData);
+            supplierData =
+                result.suppliers;
+
+            buildSupplierDropdown(
+                supplierData
+            );
+        }
 
     }catch(error){
 
-        console.error(
-            "Supplier API Error:",
-            error
+        console.error(error);
+    }
+}
+
+function periodChanged(){
+
+    const month =
+        document.getElementById("del-month").value;
+
+    const year =
+        document.getElementById("del-year").value;
+
+    if(month && year){
+
+        syncPeriod();
+    }
+}
+
+async function syncPeriod(){
+
+    selectedSupplier = "";
+
+    document.getElementById(
+        "supplierSearch"
+    ).value = "";
+
+    supplierData = [];
+
+    const month =
+        document.getElementById("del-month").value;
+
+    const year =
+        document.getElementById("del-year").value;
+
+    if(!month || !year){
+
+        showPopup(
+            "Please select month and year"
         );
 
-        document.getElementById(
-            "supplierDropdown"
-        ).innerHTML = `
-
-            <div class="option">
-                Failed load supplier
-            </div>
-        `;
+        return;
     }
+
+    const status =
+        document.getElementById("syncStatus");
+
+    status.style.display = "block";
+
+    status.innerHTML =
+        "⏳ Syncing delivery performance...";
+
+    try{
+
+        const response =
+            await fetch(
+                '{{ route("delivery.performance.sync") }}',
+                {
+                    method:'POST',
+
+                    headers:{
+                        'Content-Type':'application/json',
+                        'Accept':'application/json',
+                        'X-CSRF-TOKEN':
+                            '{{ csrf_token() }}'
+                    },
+
+                    body: JSON.stringify({
+                        month,
+                        year
+                    })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if(result.success){
+
+            status.innerHTML =
+                `✅ ${result.total} suppliers synced`;
+
+            await loadSupplierPeriod();
+
+        }else{
+
+            status.innerHTML =
+                result.message;
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        status.innerHTML =
+            "❌ Sync failed";
+    }
+}
+
+function toggleProblem(){
+
+    const yes =
+        document.getElementById("has-problem").checked;
+
+    const container =
+        document.getElementById("problem-container");
+
+
+    if(yes){
+
+        container.style.display = "block";
+
+        if(problemData.length === 0){
+            addProblemRow();
+        }
+
+    }
+
+}
+
+function toggleNoProblem(){
+
+    const container =
+        document.getElementById("problem-container");
+
+
+    container.style.display = "none";
+
+
+    document.getElementById("problem-list").innerHTML = "";
+
+
+    problemData = [];
+
+}
+
+function addProblemRow() {
+
+    const index = document.querySelectorAll(".problem-item").length;
+
+    document.getElementById("problem-list").insertAdjacentHTML("beforeend", `
+        <div class="problem-item">
+
+            <div class="problem-row">
+
+                <div class="problem-field">
+                    <label>Part No</label>
+                    <input type="text" name="partNo">
+                </div>
+
+                <div class="problem-field">
+
+                    <div class="problem-header">
+                        <label>Part Name</label>
+
+                        <button
+                            type="button"
+                            class="delete-problem-btn"
+                            onclick="removeProblem(this)">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+
+                    </div>
+
+                    <input type="text" name="partName">
+
+                </div>
+
+            </div>
+
+            <div class="problem-field">
+                <label>Remark</label>
+                <textarea name="remark"></textarea>
+            </div>
+
+        </div>
+    `);
+
+}
+
+function removeProblem(btn) {
+    btn.closest(".problem-item").remove();
 }
 
 /* =========================
@@ -489,23 +615,56 @@ function buildSupplierDropdown(data){
         div.className = "option";
 
         div.textContent =
-            `${s.bp_code} - ${s.bp_name}`;
+            s.supplier_name;
 
         div.onclick = () => {
 
             document.getElementById(
                 "supplierSearch"
             ).value =
-                `${s.bp_code} - ${s.bp_name}`;
+                s.supplier_name;
 
             selectedSupplier =
-                s.bp_code;
+                s.supplier_name;
 
-            dropdown.style.display = "none";
+            dropdown.style.display =
+                "none";
+
+            fillSupplierData(s);
         };
 
         dropdown.appendChild(div);
     });
+}
+
+function fillSupplierData(s){
+
+    document.getElementById("qty-ord").value =
+        s.qty_ordered ?? 0;
+
+    document.getElementById("qty-rec").value =
+        s.qty_received ?? 0;
+
+    // AUTO SET OTD
+    let otdValue = 0;
+
+    if(s.on_time_deliveries == 1){
+        otdValue = 2;
+    }
+    else if(s.on_time_deliveries == 2){
+        otdValue = 4;
+    }
+    else if(s.on_time_deliveries == 3){
+        otdValue = 6;
+    }
+    else if(s.on_time_deliveries > 3){
+        otdValue = 10;
+    }
+
+    document.getElementById("otd").value =
+        otdValue;
+
+    calc();
 }
 
 /* =========================
@@ -527,7 +686,6 @@ function toggleSupplierDropdown(){
 /* =========================
    FILTER SUPPLIER
 ========================= */
-
 function filterSuppliers(){
 
     const keyword =
@@ -538,7 +696,7 @@ function filterSuppliers(){
     const filtered =
         supplierData.filter(s =>
 
-            `${s.bp_code} ${s.bp_name}`
+            (s.supplier_name || '')
                 .toLowerCase()
                 .includes(keyword)
 
@@ -599,7 +757,53 @@ async function saveDelivery(){
         }
     }
 
-    // Cek supplier sudah dipilih dari dropdown
+    let problems = [];
+
+
+if(
+ document.querySelector('input[name="problem-status"]:checked')?.value === "yes"
+){
+
+
+    problemData.forEach(i => {
+
+
+        const partNo =
+            document.getElementById(`part-no-${i}`).value;
+
+
+        const partName =
+            document.getElementById(`part-name-${i}`).value;
+
+
+        const remark =
+    document.getElementById(`remark-${i}`).value;
+
+
+problems.push({
+
+    partNo,
+    partName,
+    remark
+
+});
+
+
+    });
+
+
+}else{
+
+
+    problems.push({
+
+        note:"Nothing Problem"
+
+    });
+
+
+}
+
     if(!selectedSupplier){
         showPopup(`⚠️ Please select Supplier from dropdown`);
         return;
@@ -645,9 +849,16 @@ async function saveDelivery(){
         dps:
             document.getElementById("dps").value,
 
+        problems: problems.length ? problems : null,
+
+        hasProblem:
+        document.querySelector('input[name="problem-status"]:checked')?.value ?? "no",
+
         totalScore:
             document.getElementById("total-score").textContent
     };
+
+    console.log("PROBLEMS:", problems);
 
     console.log("PAYLOAD:", payload);
 
@@ -724,12 +935,6 @@ function closePopup(){
         window.location.href = "/delivery/history";
     }
 }
-
-/* =========================
-   INIT
-========================= */
-
-loadSuppliers();
 
 </script>
 

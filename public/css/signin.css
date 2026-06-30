@@ -90,7 +90,7 @@ body{
     border:1px solid #d1d5db;
     border-radius:12px;
 
-    padding:0 45px;
+    padding:0 45px 0 45px;
 
     font-size:14px;
     outline:none;
@@ -104,9 +104,16 @@ body{
 
 .show-btn{
     position:absolute;
-    right:12px;
+    right:8px;
     top:50%;
     transform:translateY(-50%);
+
+    width:30px;
+    height:30px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     border:none;
     background:none;
@@ -114,6 +121,13 @@ body{
     cursor:pointer;
 
     color:#6b7280;
+}
+
+.show-btn i{
+    position:static;
+    transform:none;
+    left:auto;
+    top:auto;
 }
 
 .options{

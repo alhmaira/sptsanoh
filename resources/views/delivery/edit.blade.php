@@ -24,14 +24,14 @@
 
             <div class="input-group">
                 <label>Supplier</label>
-                <input type="text" name="supplierSearch" value="{{ $delivery->supplierSearch }}" required>
+                <input type="text" name="supplierSearch" value="{{ $delivery->supplierSearch }}" disabled>
             </div>
         </div>
 
         <div class="form-grid">
             <div class="input-group">
                 <label>Month</label>
-                <select name="delMonth" required>
+                <select name="delMonth" disabled>
                     <option value="01" {{ $delivery->del_month == '01' ? 'selected' : '' }}>January</option>
                     <option value="02" {{ $delivery->del_month == '02' ? 'selected' : '' }}>February</option>
                     <option value="03" {{ $delivery->del_month == '03' ? 'selected' : '' }}>March</option>
@@ -49,14 +49,14 @@
 
             <div class="input-group">
                 <label>Year</label>
-                <input type="text" name="delYear" value="{{ $delivery->del_year }}" required>
+                <input type="text" name="delYear" value="{{ $delivery->del_year }}" disabled>
             </div>
         </div>
 
         <div class="form-grid">
             <div class="input-group">
                 <label>On Time Delivery</label>
-                <select name="otd" id="otd" onchange="calc()">
+                <select name="otd" id="otd" onchange="calc()" disabled>
                     <option value="0" {{ $delivery->otd == '0' ? 'selected' : '' }}>No Delay</option>
                     <option value="2" {{ $delivery->otd == '2' ? 'selected' : '' }}>Delay 1 day</option>
                     <option value="4" {{ $delivery->otd == '4' ? 'selected' : '' }}>Delay 2 days</option>
@@ -67,19 +67,19 @@
 
             <div class="input-group">
                 <label>Fulfillment (%)</label>
-                <input type="text" id="fulfillment" name="fulfillment" value="{{ $delivery->fulfillment }}" readonly>
+                <input type="text" id="fulfillment" name="fulfillment" value="{{ $delivery->fulfillment }}" disabled>
             </div>
         </div>
 
         <div class="form-grid">
             <div class="input-group">
                 <label>Qty Order</label>
-                <input type="number" id="qtyOrd" name="qtyOrd" value="{{ $delivery->qty_ord }}" oninput="calc()">
+                <input type="number" id="qtyOrd" name="qtyOrd" value="{{ $delivery->qty_ord }}" oninput="calc()" disabled>
             </div>
 
             <div class="input-group">
                 <label>Qty Received</label>
-                <input type="number" id="qtyRec" name="qtyRec" value="{{ $delivery->qty_rec }}" oninput="calc()">
+                <input type="number" id="qtyRec" name="qtyRec" value="{{ $delivery->qty_rec }}" oninput="calc()" disabled>
             </div>
         </div>
 
@@ -99,6 +99,7 @@
         </div>
 
         <div class="form-grid">
+
             <div class="input-group">
                 <label>DPS Reply</label>
                 <select name="dps" id="dps" onchange="calc()">
@@ -107,6 +108,44 @@
                     <option value="10" {{ $delivery->dps == '10' ? 'selected' : '' }}>Delay</option>
                     <option value="20" {{ $delivery->dps == '20' ? 'selected' : '' }}>No Reply</option>
                 </select>
+            </div>
+
+            <div class="input-group">
+
+                <label>Delivery Problem</label>
+
+                <div class="radio-group">
+                    <label>
+                        <input type="radio"
+                            id="has-problem"
+                            name="hasProblem"
+                            value="yes"
+                            {{ $delivery->has_problem == 'yes' ? 'checked' : '' }}
+                            onchange="toggleProblem()">
+                        Yes
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                            id="no-problem"
+                            name="hasProblem"
+                            value="no"
+                            {{ $delivery->has_problem != 'yes' ? 'checked' : '' }}
+                            onchange="toggleNoProblem()">
+                        No
+                    </label>
+                </div>
+
+            </div>
+
+            <div id="problem-container" class="problem-container" style="display:none; grid-column:1/-1;">
+                <div id="problem-list"></div>
+
+                <button type="button"
+                        class="add-problem-btn"
+                        onclick="addProblemRow()">
+                    + Add Problem
+                </button>
             </div>
 
             <div class="input-group">
@@ -165,6 +204,81 @@ function calc() {
 
 // hitung saat halaman load
 calc();
+
+const existingProblems = @json(json_decode($delivery->problems ?? '[]', true));
+
+function toggleProblem(){
+
+    const container=document.getElementById("problem-container");
+
+    container.style.display="block";
+
+    if(document.getElementById("problem-list").children.length===0){
+        addProblemRow();
+    }
+
+}
+
+function toggleNoProblem(){
+
+    document.getElementById("problem-container").style.display="none";
+    document.getElementById("problem-list").innerHTML="";
+
+}
+function addProblemRow(problem={}){
+
+    const row=document.createElement("div");
+    row.className="problem-item";
+
+    row.innerHTML=`
+        <div class="problem-row">
+
+            <div class="problem-field">
+                <label>Part No</label>
+                <input type="text" name="problems[][partNo]" value="${problem.partNo??''}">
+            </div>
+
+            <div class="problem-field">
+                <div class="problem-header">
+                    <label>Part Name</label>
+                    <button type="button"
+                            class="delete-problem-btn"
+                            onclick="this.closest('.problem-item').remove()">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+                <input type="text" name="problems[][partName]" value="${problem.partName??''}">
+            </div>
+
+            <div class="problem-field" style="grid-column:1/-1;">
+                <label>Problem</label>
+                <textarea name="problems[][problem]">${problem.problem??''}</textarea>
+            </div>
+
+        </div>
+    `;
+
+    document.getElementById("problem-list").appendChild(row);
+}
+
+window.onload=function(){
+
+    calc();
+
+    if(existingProblems.length){
+
+        toggleProblem();
+
+        document.querySelector('input[name="hasProblem"][value="yes"]').checked=true;
+
+        document.getElementById("problem-list").innerHTML="";
+
+        existingProblems.forEach(p=>addProblemRow(p));
+
+    }
+
+};
+
 </script>
 @endpush
 

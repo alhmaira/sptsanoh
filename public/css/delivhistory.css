@@ -73,55 +73,42 @@ body{
 /* =========================
    HISTORY TABLE
 ========================= */
-
 .history-table{
     width:100%;
     border-collapse:collapse;
-    table-layout:fixed;
+    table-layout:auto;
     background:#fff;
     border-radius:14px;
     overflow:hidden;
     border:1px solid #e4e8f0;
     box-shadow:0 2px 10px rgba(0,0,0,0.05);
-    font-size:13px;
+    font-size:14px;
 }
 
-.history-table th{
+.history-table th {
     background:#1f3c88;
     color:#fff;
-
-    padding:11px 12px;
-
+    padding:14px 12px;
     text-align:center;
     font-weight:600;
-
     position:sticky;
     top:0;
     z-index:2;
-
-    line-height:1.2;
 }
 
-.history-table td{
-    padding:10px 12px;
-
+.history-table td {
+    padding:14px 12px;
     text-align:center;
-
     border-bottom:1px solid #edf1f7;
-
     color:#374151;
-
-    line-height:1.2;
 }
 
 .history-table td,
 .history-table th{
     white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
 }
 
-.history-table td:first-child{
+.history-table td:first-child {
     text-align:center;
     font-weight:600;
     color:#1a3a8f;
@@ -136,6 +123,7 @@ body{
     cursor:pointer;
 }
 
+
 /* =========================
    ACTION BUTTON
 ========================= */
@@ -148,34 +136,43 @@ body{
 
 .table-view-btn,
 .table-edit-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
     width:30px;
     height:30px;
-
+    background:transparent;
     border:none;
-    border-radius:8px;
-
-    background:#fff;
+    outline:none;
     cursor:pointer;
-
     transition:0.2s;
+    padding:0;
 }
 
 .table-view-btn:hover,
 .table-edit-btn:hover{
-    background:#eff4ff;
-    transform:translateY(-1px);
+    transform:translateY(-1px) scale(1.1);
 }
 
 .table-view-btn i{
     color:#2563eb;
+    transition:.2s;
 }
 
 .table-edit-btn i{
     color:#f59e0b;
+    transition:.2s;
+}
+
+.table-view-btn:hover i{
+    color:#1d4ed8;
+}
+
+.table-edit-btn:hover i{
+    color:#d97706;
 }
 
 .table-edit-btn.disabled{
-    background:#f1f5f9;
     cursor:not-allowed;
     opacity:0.6;
 }
@@ -208,7 +205,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-bottom:22px;
+    margin-bottom:24px;
 }
 
 .doc-title{
@@ -223,30 +220,44 @@ body{
     width:90px;
 }
 
+
 /* =========================
    BACK BUTTON
 ========================= */
 
 .back-btn{
-    background:#1f3c88;
-    color:#fff;
+    width:44px;
+    height:44px;
 
-    border:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
 
-    border-radius:8px;
+    flex-shrink:0;
 
-    padding:9px 16px;
+    padding:0;
+    margin:0;
 
-    font-size:14px;
-    font-weight:600;
+    border:1px solid #d9e2f1;
+    border-radius:12px;
+
+    background:#fff;
+    color:#1a3c6e;
+
+    font-size:18px;
+    font-weight:700;
+    line-height:1;
 
     cursor:pointer;
 
-    transition:.2s;
+    transition:all .2s ease;
 }
 
 .back-btn:hover{
-    background:#16306d;
+    background:#f4f7ff;
+    border-color:#2d5fde;
+    color:#2d5fde;
+    box-shadow:0 4px 12px rgba(45,95,222,.15);
 }
 
 /* =========================
@@ -281,6 +292,7 @@ body{
     font-weight:600;
     color:#0f172a;
 }
+
 
 /* =========================
    SECTION TITLE
@@ -408,6 +420,24 @@ body{
     font-weight:700;
 }
 
+.detail-table td[rowspan]{
+    vertical-align: middle;
+    font-weight: 600;
+    background: #fafbfc;
+}
+
+.detail-table .main-label{
+    width: 180px;
+}
+
+.detail-table td:nth-child(2){
+    width: 110px;
+}
+
+.detail-table td:nth-child(3){
+    width: 170px;
+}
+
 /* =========================
    MENU
 ========================= */
@@ -451,6 +481,34 @@ option{
     font-family:"Outfit", sans-serif !important;
 }
 
+.notes-card{
+
+    margin-top:20px;
+    padding:15px 18px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:#fafafa;
+
+}
+
+
+.notes-title{
+
+    font-weight:700;
+    margin-bottom:10px;
+    font-size:14px;
+
+}
+
+
+.notes-content{
+
+    font-size:13px;
+    line-height:1.6;
+
+}
+
+
 /* =========================
    RESPONSIVE
 ========================= */
@@ -488,4 +546,127 @@ option{
         display:block;
         overflow-x:auto;
     }
+}
+
+/* =========================================================
+   PROBLEM
+========================================================= */
+.problem-container{
+grid-column: 1 / -1;
+width:100%;
+max-width:100%;
+margin-top:8px;
+align-self:start;
+}
+
+.problem-item{
+width:100%;
+background:#fff;
+border:1px solid #e6ebf3;
+border-radius:12px;
+padding:14px;
+margin-bottom:12px;
+box-sizing:border-box;
+}
+
+.problem-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:12px;
+    row-gap:6px;
+}
+
+.problem-field label{
+    margin-bottom:2px;
+}
+
+.problem-field label{
+margin-bottom:6px;
+font-size:13px;
+font-weight:600;
+color:#4b5563;
+}
+
+.problem-field input,
+.problem-field textarea{
+    width:100%;
+    height:34px;
+    padding:6px 10px;
+    border:1px solid #d8dee9;
+    border-radius:8px;
+    font-size:13px;
+    font-family:"Outfit",sans-serif;
+    box-sizing:border-box;
+    transition:.2s;
+    background:#fff;
+}
+
+.problem-field textarea{
+min-height:70px;
+resize:vertical;
+}
+
+.problem-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:6px;
+}
+
+.problem-header label{
+margin:0;
+}
+
+.delete-problem-btn{
+border:none;
+background:transparent;
+padding:2px;
+font-size:15px;
+color:#9ca3af;
+cursor:pointer;
+transition:.2s;
+}
+
+.delete-problem-btn:hover{
+color:#4b5563;
+}
+
+.add-problem-btn{
+margin-top:4px;
+padding:0;
+border:none;
+background:none;
+font-size:13px;
+font-weight:600;
+color:#7b8794;
+cursor:pointer;
+transition:.2s;
+}
+
+.add-problem-btn:hover{
+color:#374151;
+}
+
+.radio-group{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-top:8px;
+}
+
+.radio-group label{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin:0;
+    font-size:13px;
+    font-weight:400;
+    cursor:pointer;
+    line-height:1;
+}
+
+.radio-group input[type="radio"]{
+    margin:0;
+    vertical-align:middle;
+    flex-shrink:0;
 }

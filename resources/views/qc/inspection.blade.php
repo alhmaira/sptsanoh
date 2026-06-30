@@ -38,18 +38,12 @@
 @endsection
 
 {{-- POPUP --}}
+
 <div id="popup" class="popup">
-
     <div class="popup-box">
-
         <p id="popup-message"></p>
-
-        <button onclick="closePopup()">
-            OK
-        </button>
-
+        <button onclick="closePopup()">OK</button>
     </div>
-
 </div>
 
 @push('scripts')
@@ -62,6 +56,7 @@ const deliveryData = @json($deliveries);
 deliveryData.sort((a, b) => b.docNumber.localeCompare(a.docNumber));
 
 let selectedDoc = null;
+let qcProblemData = [];
 
 /* =========================
    POPUP
@@ -90,7 +85,22 @@ function formatPeriod(month, year){
         return "-";
     }
 
-    return `${month}/${year}`;
+    const months = {
+        "01": "January",
+        "02": "February",
+        "03": "March",
+        "04": "April",
+        "05": "May",
+        "06": "June",
+        "07": "July",
+        "08": "August",
+        "09": "September",
+        "10": "October",
+        "11": "November",
+        "12": "December"
+    };
+
+    return `${months[month]} ${year}`;
 }
 
 /* =========================
@@ -229,7 +239,7 @@ function showDetail(d){
 
             <input type="number"
                 id="supply"
-                readonly>
+                disabled>
 
         </div>
 
@@ -307,21 +317,52 @@ function showDetail(d){
 
         </div>
 
+        {{-- QUALITY PROBLEM --}}
+        <div class="field">
+            <label>Quality Problem</label>
+            <div style="display:flex;align-items:center;gap:15px;">
+                <label style="display:flex;align-items:center;gap:6px;">
+                    <input type="radio"
+                        name="qc-problem-status"
+                        id="qc-has-problem"
+                        value="yes"
+                        onchange="toggleQCProblem()">
+                    Yes
+                </label>
+
+                <label style="display:flex;align-items:center;gap:6px;">
+                    <input type="radio"
+                        name="qc-problem-status"
+                        id="qc-no-problem"
+                        value="no"
+                        onchange="toggleNoQCProblem()">
+                    No
+                </label>
+            </div>
+        </div>
+
+        <div id="qcProblemContainer" class="problem-container" style="display:none;">
+            <div id="qcProblemList"></div>
+
+            <button type="button"
+                    class="add-problem-btn"
+                    onclick="addQCProblemRow()">
+                + Add Problem
+            </button>
+        </div>
+
+    <div class="section-title">
+        Total Score
     </div>
 
-    <hr>
-
-    <h3>Total Score</h3>
-
-    <div class="total-box" id="qcTotal">
-        —
+    <div class="total-box">
+        <div class="total-num" id="qcTotal">
+            —
+        </div>
     </div>
 
-    <button class="btn-save"
-        onclick="saveQC()">
-
-        Save QC
-
+    <button class="btn-save" onclick="saveQC()">
+        Save Data
     </button>
 
 </div>
@@ -329,6 +370,85 @@ function showDetail(d){
 
     document.getElementById("supply").value =
         Number(d.qty_rec || 0);
+}
+
+function toggleQCProblem(){
+
+    document.getElementById(
+        "qcProblemContainer"
+    ).style.display = "block";
+
+
+    if(qcProblemData.length === 0){
+
+        addQCProblemRow();
+
+    }
+
+}
+
+
+
+function toggleNoQCProblem(){
+
+    document.getElementById(
+        "qcProblemContainer"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "qcProblemList"
+    ).innerHTML = "";
+
+
+    qcProblemData = [];
+
+}
+
+function addQCProblemRow(){
+
+    const row = document.createElement("div");
+    row.className = "problem-item";
+
+    row.innerHTML = `
+        <div class="problem-row">
+
+            <div class="problem-field">
+                <label>Part No</label>
+                <input type="text" class="qc-part-no">
+            </div>
+
+            <div class="problem-field">
+                <div class="problem-header">
+                    <label>Part Name</label>
+                    <button type="button"
+                            class="delete-problem-btn"
+                            onclick="this.closest('.problem-item').remove()">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+                <input type="text" class="qc-part-name">
+            </div>
+
+            <div class="problem-field">
+                <label>Delivery</label>
+                <input type="text" class="qc-delivery">
+            </div>
+
+            <div class="problem-field">
+                <label>NG</label>
+                <input type="number" class="qc-ng">
+            </div>
+
+            <div class="problem-field" style="grid-column:1 / -1;">
+                <label>Problem</label>
+                <textarea class="qc-problem"></textarea>
+            </div>
+
+        </div>
+    `;
+
+    document.getElementById("qcProblemList").appendChild(row);
 }
 
 /* =========================
@@ -401,8 +521,7 @@ function calcQC(){
         );
 
     document.getElementById("qcTotal").innerText =
-        Math.max(0, Math.min(100, total))
-        .toFixed(1);
+    Math.max(0, Math.min(100, total));
 }
 
 /* =========================
@@ -415,6 +534,71 @@ async function saveQC(){
         showPopup("Select delivery first");
         return;
     }
+
+    let qualityProblems = [];
+
+
+const qcStatus =
+document.querySelector(
+'input[name="qc-problem-status"]:checked'
+)?.value;
+
+
+
+if(qcStatus === "yes"){
+
+
+    qcProblemData.forEach(i=>{
+
+
+        qualityProblems.push({
+
+            partNo:
+            document.getElementById(
+            `qc-part-no-${i}`
+            ).value,
+
+
+            partName:
+            document.getElementById(
+            `qc-part-name-${i}`
+            ).value,
+
+
+            delivery:
+            document.getElementById(
+            `qc-delivery-${i}`
+            ).value,
+
+
+            ng:
+            document.getElementById(
+            `qc-ng-${i}`
+            ).value,
+
+
+            problem:
+            document.getElementById(
+            `qc-problem-${i}`
+            ).value
+
+        });
+
+
+    });
+
+
+}else{
+
+
+    qualityProblems.push({
+
+        note:"Nothing Problem"
+
+    });
+
+
+}
 
     const payload = {
 
@@ -464,6 +648,14 @@ async function saveQC(){
             Number(
                 document.getElementById("fppk").value
             ) || 0,
+
+        has_problem:
+        qcStatus ?? "no",
+
+        qualityProblems:
+            qualityProblems,
+
+        
 
         total_score:
             Number(

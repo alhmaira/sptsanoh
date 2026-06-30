@@ -17,10 +17,21 @@
     <div class="topbar-left">
 
         <!-- SUPPLIER -->
-        <div class="filter-box"> 
-            <select id="supplierSelect">
-                <option value="ALL">All Suppliers</option>
-            </select>
+        <div class="filter-box">
+            <div class="dropdown">
+
+                <input
+                    type="text"
+                    id="supplierSearch"
+                    placeholder="All Suppliers"
+                    onclick="toggleSupplierDropdown()"
+                    onkeyup="filterSuppliers()">
+
+                <div id="supplierDropdown"
+                    class="dropdown-list">
+                </div>
+
+            </div>
         </div>
 
         <!-- MONTH -->
@@ -146,16 +157,109 @@ let supplierSet = new Set([
 ]);
 let suppliers = [...supplierSet];
 
+function buildSupplierDropdown(data){
+
+    const dropdown =
+        document.getElementById("supplierDropdown");
+
+    dropdown.innerHTML = "";
+
+    // All Supplier
+    const all = document.createElement("div");
+    all.textContent = "All Suppliers";
+
+    all.onclick = () => {
+
+        selectedSupplier = "ALL";
+
+        document.getElementById("supplierSearch").value = "";
+
+        dropdown.style.display = "none";
+
+        renderAll();
+
+    };
+
+    dropdown.appendChild(all);
+
+    data.forEach(name=>{
+
+        const div =
+            document.createElement("div");
+
+        div.textContent = name;
+
+        div.onclick = ()=>{
+
+            selectedSupplier = name;
+
+            document.getElementById("supplierSearch").value = name;
+
+            dropdown.style.display = "none";
+
+            renderAll();
+
+        };
+
+        dropdown.appendChild(div);
+
+    });
+
+}
+
+function filterSuppliers(){
+
+    const keyword =
+        document.getElementById("supplierSearch")
+        .value
+        .toLowerCase();
+
+    const filtered =
+        suppliers.filter(s=>
+            s.toLowerCase().includes(keyword)
+        );
+
+    buildSupplierDropdown(filtered);
+
+    document.getElementById("supplierDropdown")
+        .style.display = "block";
+}
+
+function toggleSupplierDropdown(){
+
+    const dropdown =
+        document.getElementById("supplierDropdown");
+
+    dropdown.style.display =
+        dropdown.style.display==="block"
+        ? "none"
+        : "block";
+}
+
+document.addEventListener("click",function(e){
+
+    const dropdown =
+        document.querySelector(".dropdown");
+
+    if(
+        dropdown &&
+        !dropdown.contains(e.target)
+    ){
+
+        document.getElementById(
+            "supplierDropdown"
+        ).style.display="none";
+
+    }
+
+});
+
 /* ======================
 SUPPLIER DROPDOWN
 ====================== */
-const supplierSelect = document.getElementById("supplierSelect");
-suppliers.forEach(s=>{
-    let opt = document.createElement("option");
-    opt.value = s;
-    opt.textContent = s;
-    supplierSelect.appendChild(opt);
-});
+let selectedSupplier = "ALL";
+
+buildSupplierDropdown(suppliers);
 
 /* ======================
 YEAR DROPDOWN
@@ -176,7 +280,7 @@ let yearSet = new Set();
 FILTER DATA
 ====================== */
 function filterData(data){
-    let supplier = supplierSelect.value;
+    let supplier = selectedSupplier;
     let month = document.getElementById("monthFilter").value;
     let year = document.getElementById("yearFilter").value;
 
@@ -387,7 +491,6 @@ function renderAll(){
 /* ======================
 EVENT
 ====================== */
-supplierSelect.addEventListener("change", renderAll);
 document.getElementById("monthFilter").addEventListener("change", renderAll);
 document.getElementById("yearFilter").addEventListener("change", renderAll);
 

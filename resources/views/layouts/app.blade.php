@@ -9,6 +9,9 @@
 
 <title>@yield('title', 'SPT Dashboard')</title>
 
+<!-- FAVICON -->
+<link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+
 <!-- GLOBAL CSS -->
 
 <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
@@ -170,9 +173,9 @@
 <div class="sidebar">
 
     @php
-    $userDept = Auth::user()?->department;
-    $userRole = Auth::user()?->role;
-@endphp
+        $userDept = Auth::user()?->department;
+        $userRole = Auth::user()?->role;
+    @endphp
 
     <div class="sidebar-logo">
 
@@ -201,13 +204,13 @@
     </a>
     @endif
 
-    @if($userDept == 'Warehouse' || $userRole == 'Admin')
+    {{-- Input Delivery: Warehouse & PPIC --}}
+    @if(in_array($userDept, ['Warehouse', 'PPIC']) || $userRole == 'Admin')
     <a href="{{ url('/delivery/input') }}"
     class="{{ request()->is('delivery/input') ? 'active' : '' }}">
         <i class="fas fa-truck"></i>
         Input Delivery
     </a>
-
     @endif
 
     @if($userDept == 'Quality Control' || $userRole == 'Admin')
@@ -218,8 +221,8 @@
     </a>
     @endif
 
-    @if($userDept == 'Warehouse' || $userRole == 'Admin')
-
+    {{-- Delivery History: Warehouse & PPIC --}}
+    @if(in_array($userDept, ['Warehouse', 'PPIC']) || $userRole == 'Admin')
     <a href="{{ url('/delivery/history') }}"
     class="{{ request()->is('delivery/history') ? 'active' : '' }}">
         <i class="fas fa-history"></i>
@@ -233,7 +236,6 @@
         <i class="fas fa-check-double"></i>
         QC History
     </a>
-
     @endif
 
     @if($userRole == 'Admin')
@@ -244,50 +246,49 @@
     </a>
     @endif
 
-    @if($userRole == 'Admin'
+    @if(
+        $userRole == 'Admin'
 
-    ||
+        ||
 
-    ($userRole == 'Supervisor'
-        && $userDept == 'Quality Control')
+        ($userRole == 'Supervisor'
+            && $userDept == 'Quality Control')
 
-    ||
+        ||
 
-    ($userRole == 'Manager'
-        && $userDept == 'Quality Control')
+        ($userRole == 'Manager'
+            && $userDept == 'Quality Control')
 
-    ||
+        ||
 
-    ($userRole == 'Supervisor'
-        && $userDept == 'PPIC')
+        ($userRole == 'Supervisor'
+            && $userDept == 'PPIC')
 
-    ||
+        ||
 
-    ($userRole == 'Manager'
-        && $userDept == 'PPIC')
+        ($userRole == 'Manager'
+            && $userDept == 'PPIC')
 
-    ||
+        ||
 
-    ($userRole == 'Leader'
-        && $userDept == 'Purchasing')
+        ($userRole == 'Leader'
+            && $userDept == 'Purchasing')
 
-    ||
+        ||
 
-    ($userRole == 'Manager'
-        && $userDept == 'Purchasing')
+        ($userRole == 'Manager'
+            && $userDept == 'Purchasing')
 
-    ||
+        ||
 
-    ($userRole == 'General Manager'
-        && $userDept == 'Production')
-
-)
+        ($userRole == 'General Manager'
+            && $userDept == 'Production')
+    )
     <a href="{{ url('/approval') }}"
     class="{{ request()->is('approval') ? 'active' : '' }}">
         <i class="fas fa-check-circle"></i>
         Approval Workflow
     </a>
-
     @endif
 
 </div>

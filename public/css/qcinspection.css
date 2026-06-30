@@ -1,4 +1,4 @@
-body {
+* {
     font-family: "Outfit", sans-serif;
 }
 
@@ -64,18 +64,46 @@ body {
     padding: 0 10px;
     border: 1px solid #d4d8e4;
     border-radius: 8px;
-    font-size: 13px; /* 🔥 INI KUNCI */
+    font-size: 13px; 
 }
 
+
+/* =========================================================
+   TOTAL SCORE
+========================================================= */
+
 .total-box {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
+    grid-column: 1 / -1;
+
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 5px;
+    padding: 10px 0;
+}
+
+/* Left Label */
+.total-box::before {
+    content: attr(data-label);
+
+    position: absolute;
+    left: 0;
+
+    font-size: 13px;
+    color: #8896ab;
+}
+
+/* Total Value */
+.total-num {
+    font-size: 34px;
+    font-weight: 800;
     color: #1e2a45;
 }
 
-.detail-card button {
+.detail-card .btn-save{
     margin-top: 14px;
     width: 100%;
     height: 40px;
@@ -86,32 +114,84 @@ body {
     cursor: pointer;
 }
 
-/* =========================
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+.btn-save {
+    grid-column: 1 / -1;
+
+    width: 100%;
+    height: 42px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: linear-gradient(135deg, #1a3a8f, #2d5fde);
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.save-msg {
+    display: none;
+
+    margin-top: 12px;
+
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+
+    color: #065f46;
+}
+
+/* =========================================================
    POPUP
-========================= */
+========================================================= */
 
 /* Popup Overlay */
 .popup {
     position: fixed;
     top: 0;
     left: 0;
+
     display: none;
     justify-content: center;
     align-items: center;
+
     width: 100%;
     height: 100%;
+
     background: rgba(0, 0, 0, 0.4);
+
     z-index: 2000;
 }
 
 /* Popup Box */
 .popup-box {
     width: 300px;
+
     padding: 25px 30px;
+
     background: white;
     border-radius: 12px;
+
     text-align: center;
     font-size: 14px;
+
     animation: fadeIn 0.3s ease;
 }
 
@@ -122,10 +202,13 @@ body {
 
 .popup-box button {
     padding: 10px 20px;
+
     border: none;
     border-radius: 8px;
+
     background: #2d5fde;
     color: white;
+
     cursor: pointer;
 }
 
@@ -133,11 +216,16 @@ body {
     opacity: 0.9;
 }
 
+/* =========================================================
+   ANIMATION
+========================================================= */
+
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -177,6 +265,25 @@ ul {
     display: block !important;
 }
 
+.problem-row input{
+
+    height:36px;
+
+    padding:0 12px;
+
+    font-size:13px;
+
+    font-family:"Outfit", sans-serif;
+
+    border:1px solid #d4d8e4;
+
+    border-radius:8px;
+
+    background:#fafbfd;
+
+}
+
+
 /* GRID FORM */
 .form-grid {
     display: grid;
@@ -210,4 +317,104 @@ ul {
 
 .detail-card hr {
     margin: 20px 0;
+}
+
+
+/* =========================================================
+   PROBLEM
+========================================================= */
+.problem-container{
+grid-column: 1 / -1;
+width:100%;
+max-width:100%;
+margin-top:8px;
+align-self:start;
+}
+
+.problem-item{
+width:100%;
+background:#fff;
+border:1px solid #e6ebf3;
+border-radius:12px;
+padding:14px;
+margin-bottom:12px;
+box-sizing:border-box;
+}
+
+.problem-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:12px;
+    row-gap:6px;
+}
+
+.problem-field label{
+    margin-bottom:2px;
+}
+
+.problem-field label{
+margin-bottom:6px;
+font-size:13px;
+font-weight:600;
+color:#4b5563;
+}
+
+.problem-field input,
+.problem-field textarea{
+    width:100%;
+    height:34px;
+    padding:6px 10px;
+    border:1px solid #d8dee9;
+    border-radius:8px;
+    font-size:13px;
+    font-family:"Outfit",sans-serif;
+    box-sizing:border-box;
+    transition:.2s;
+    background:#fff;
+}
+
+.problem-field textarea{
+min-height:70px;
+resize:vertical;
+}
+
+.problem-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:6px;
+}
+
+.problem-header label{
+margin:0;
+}
+
+.delete-problem-btn{
+border:none;
+background:transparent;
+padding:2px;
+font-size:15px;
+color:#9ca3af;
+cursor:pointer;
+transition:.2s;
+}
+
+.delete-problem-btn:hover{
+color:#4b5563;
+}
+
+.add-problem-btn{
+margin-top:4px;
+padding:0;
+border:none;
+background:none;
+font-size:13px;
+font-weight:600;
+color:#7b8794;
+cursor:pointer;
+transition:.2s;
+}
+
+.add-problem-btn:hover{
+color:#374151;
 }
