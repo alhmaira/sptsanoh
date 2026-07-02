@@ -209,8 +209,6 @@ function showDetail(d){
 
             <select id="lineStop" onchange="calcQC()">
 
-                <option value="">Select</option>
-
                 <option value="40">
                     Yes
                 </option>
@@ -267,10 +265,7 @@ function showDetail(d){
 
             <label>Rank</label>
 
-            <select id="rank"
-                onchange="calcQC()">
-
-                <option value="">Select</option>
+            <select id="rank" onchange="calcQC()">
 
                 <option value="0">
                     No Problem
@@ -296,10 +291,7 @@ function showDetail(d){
 
             <label>FPPK</label>
 
-            <select id="fppk"
-                onchange="calcQC()">
-
-                <option value="">Select</option>
+            <select id="fppk" onchange="calcQC()">
 
                 <option value="0">
                     No Problem
@@ -537,69 +529,37 @@ async function saveQC(){
 
     let qualityProblems = [];
 
+    const qcStatus =
+    document.querySelector(
+    'input[name="qc-problem-status"]:checked'
+    )?.value;
 
-const qcStatus =
-document.querySelector(
-'input[name="qc-problem-status"]:checked'
-)?.value;
+    if (qcStatus === "yes") {
 
+        document.querySelectorAll("#qcProblemList .problem-item").forEach(item => {
 
+            qualityProblems.push({
 
-if(qcStatus === "yes"){
+                partNo: item.querySelector(".qc-part-no").value,
 
+                partName: item.querySelector(".qc-part-name").value,
 
-    qcProblemData.forEach(i=>{
+                delivery: item.querySelector(".qc-delivery").value,
 
+                ng: item.querySelector(".qc-ng").value,
 
-        qualityProblems.push({
+                problem: item.querySelector(".qc-problem").value
 
-            partNo:
-            document.getElementById(
-            `qc-part-no-${i}`
-            ).value,
-
-
-            partName:
-            document.getElementById(
-            `qc-part-name-${i}`
-            ).value,
-
-
-            delivery:
-            document.getElementById(
-            `qc-delivery-${i}`
-            ).value,
-
-
-            ng:
-            document.getElementById(
-            `qc-ng-${i}`
-            ).value,
-
-
-            problem:
-            document.getElementById(
-            `qc-problem-${i}`
-            ).value
+            });
 
         });
 
+    } else {
 
-    });
+        qualityProblems = [];
 
-
-}else{
-
-
-    qualityProblems.push({
-
-        note:"Nothing Problem"
-
-    });
-
-
-}
-
+    }
+    
     const payload = {
 
         docNumber:

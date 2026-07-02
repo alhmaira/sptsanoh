@@ -93,7 +93,7 @@
 <!-- POPUP BLOCKED -->
 <div id="blockedPopup" class="popup" style="display:none;">
     <div class="popup-box">
-        <p>⚠️ Cannot edit - document is already in approval process.</p>
+        <p>⚠️ You are not authorized to edit this document.</p>
         <button onclick="closeBlockedPopup()">OK</button>
     </div>
 </div>
@@ -255,31 +255,26 @@ function renderSupplierList(filtered) {
     }
 
     paginatedData.forEach(d => {
+
         const approval = approvals[d.docNumber];
-        const approvalStarted = !!approvals[d.docNumber];
 
-        let canEdit = false;
+        const isApproved =
+            approval &&
+            approval.status === "APPROVED";
 
-        if (!approvalStarted) {
-
-            // sebelum approval
-            canEdit =
-                (userDept === "Quality Control" &&
+        const hasPermission =
+            (userDept === "Quality Control" &&
                 ["Staff","Supervisor","Manager"].includes(userRole))
-                ||
-                (userDept === "IT" &&
+            ||
+            (userDept === "Purchasing" &&
+                ["Leader","Manager"].includes(userRole))
+            ||
+            (userDept === "IT" &&
                 userRole === "Admin");
 
-        } else {
-
-            // sesudah approval dimulai
-            canEdit =
-                userDept === "Quality Control" &&
-                ["Supervisor","Manager"].includes(userRole);
-
-        }
+        const canEdit = hasPermission && !isApproved;
+            
         const row       = document.createElement("tr");
-
         row.innerHTML = `
             <td>${d.docNumber}</td>
             <td>${formatDate(d.created_at)}</td>
@@ -298,10 +293,8 @@ function renderSupplierList(filtered) {
                 <button
                     class="table-edit-btn ${!canEdit ? 'disabled' : ''}"
                     onclick="${canEdit ? `openEdit(${d.id})` : 'showEditBlocked()'}"
-                    title="${canEdit ? 'Edit' : 'Not Allowed'}">
-
+                    title="${canEdit ? 'Edit' : 'Cannot Edit'}">
                     <i class="fa-solid fa-pen"></i>
-
                 </button>
             </td>
         `;
