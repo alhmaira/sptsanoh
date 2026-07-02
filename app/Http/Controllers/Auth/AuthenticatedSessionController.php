@@ -32,10 +32,9 @@ class AuthenticatedSessionController extends Controller
     $user = Auth::user();
 
     // FORCE CHANGE PASSWORD
-    if ($user->first_login || $user->must_change_password) {
-
-        return redirect()->route('password.change');
-    }
+if ($user->first_login || $user->must_change_password) {
+    return redirect()->route('password.change');
+}
 
     return redirect()->intended(RouteServiceProvider::HOME);
 }

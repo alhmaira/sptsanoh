@@ -207,6 +207,11 @@ calc();
 
 const existingProblems = @json(json_decode($delivery->problems ?? '[]', true));
 
+// counter index untuk name="problems[N][...]" -> wajib eksplisit,
+// kalau pakai "problems[][...]" untuk banyak field beda, PHP TIDAK akan
+// menggabungkan field-field itu jadi satu baris, malah jadi baris terpisah-pisah.
+let problemIndex = 0;
+
 function toggleProblem(){
 
     const container=document.getElementById("problem-container");
@@ -223,9 +228,12 @@ function toggleNoProblem(){
 
     document.getElementById("problem-container").style.display="none";
     document.getElementById("problem-list").innerHTML="";
+    problemIndex = 0;
 
 }
 function addProblemRow(problem={}){
+
+    const index = problemIndex;
 
     const row=document.createElement("div");
     row.className="problem-item";
@@ -235,7 +243,7 @@ function addProblemRow(problem={}){
 
             <div class="problem-field">
                 <label>Part No</label>
-                <input type="text" name="problems[][partNo]" value="${problem.partNo??''}">
+                <input type="text" name="problems[${index}][partNo]" value="${problem.partNo??''}">
             </div>
 
             <div class="problem-field">
@@ -247,37 +255,42 @@ function addProblemRow(problem={}){
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
-                <input type="text" name="problems[][partName]" value="${problem.partName??''}">
+                <input type="text" name="problems[${index}][partName]" value="${problem.partName??''}">
             </div>
 
             <div class="problem-field" style="grid-column:1/-1;">
                 <label>Problem</label>
-                <textarea name="problems[][problem]">${problem.problem??''}</textarea>
+                <textarea name="problems[${index}][remark]">${problem.remark ?? ''}</textarea>
             </div>
 
         </div>
     `;
 
     document.getElementById("problem-list").appendChild(row);
+
+    problemIndex++;
 }
 
-window.onload=function(){
+window.onload = function(){
 
     calc();
 
-    if(existingProblems.length){
+    if(document.getElementById("has-problem").checked){
 
-        toggleProblem();
+        document.getElementById("problem-container").style.display = "block";
 
-        document.querySelector('input[name="hasProblem"][value="yes"]').checked=true;
+        document.getElementById("problem-list").innerHTML = "";
+        problemIndex = 0;
 
-        document.getElementById("problem-list").innerHTML="";
-
-        existingProblems.forEach(p=>addProblemRow(p));
+        if(Array.isArray(existingProblems) && existingProblems.length > 0){
+            existingProblems.forEach(p => addProblemRow(p));
+        } else {
+            addProblemRow();
+        }
 
     }
 
-};
+}
 
 </script>
 @endpush

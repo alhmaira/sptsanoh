@@ -23,7 +23,9 @@ class DeliveryPerformanceController extends Controller
 
         try {
 
-            $response = Http::timeout(30)->get(
+            $response = Http::withoutVerifying()
+            ->timeout(30)
+            ->get(
                 'https://be-ams.sanohindonesia.co.id/api/public/delivery-performance/',
                 [
                     'month' => $month,
@@ -127,7 +129,9 @@ class DeliveryPerformanceController extends Controller
 
     try {
 
-        $response = Http::timeout(30)->get(
+        $response = Http::withoutVerifying()
+        ->timeout(30)
+        ->get(
             'https://be-ams.sanohindonesia.co.id/api/public/delivery-performance/',
             [
                 'month' => $month,

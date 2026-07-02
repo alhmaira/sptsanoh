@@ -153,6 +153,9 @@
 
 @push('scripts')
 <script>
+// Data qualityProblems yang sudah tersimpan di database, dikirim dari controller (edit())
+const existingQCProblems = @json($qc->qualityProblems ?? []);
+
 function calcQC() {
     const lineStop = Number(document.getElementById("lineStop").value) || 0;
     const ng = Number(document.getElementById("ng").value) || 0;
@@ -200,7 +203,14 @@ function toggleNoQCProblem(){
 
 }
 
-function addQCProblemRow(){
+// data (opsional) dipakai untuk prefill baris dari data lama (existingQCProblems)
+function addQCProblemRow(data = {}){
+
+    const partNo    = data.partNo    ?? '';
+    const partName  = data.partName  ?? '';
+    const delivery  = data.delivery  ?? '';
+    const ng        = data.ng        ?? '';
+    const problem   = data.problem   ?? '';
 
     const html=`
     <div class="problem-item">
@@ -210,7 +220,8 @@ function addQCProblemRow(){
             <div class="problem-field">
                 <label>Part No</label>
                 <input type="text"
-                       name="qualityProblems[${qcProblemIndex}][partNo]">
+                       name="qualityProblems[${qcProblemIndex}][partNo]"
+                       value="${partNo}">
             </div>
 
             <div class="problem-field">
@@ -228,26 +239,29 @@ function addQCProblemRow(){
                 </div>
 
                 <input type="text"
-                    name="qualityProblems[${qcProblemIndex}][partName]">
+                    name="qualityProblems[${qcProblemIndex}][partName]"
+                    value="${partName}">
 
             </div>
 
             <div class="problem-field">
                 <label>Delivery</label>
                 <input type="text"
-                       name="qualityProblems[${qcProblemIndex}][delivery]">
+                       name="qualityProblems[${qcProblemIndex}][delivery]"
+                       value="${delivery}">
             </div>
 
             <div class="problem-field">
                 <label>NG</label>
                 <input type="text"
-                       name="qualityProblems[${qcProblemIndex}][ng]">
+                       name="qualityProblems[${qcProblemIndex}][ng]"
+                       value="${ng}">
             </div>
 
             <div class="problem-field" style="grid-column:1/-1;">
                 <label>Problem</label>
                 <textarea
-                    name="qualityProblems[${qcProblemIndex}][problem]"></textarea>
+                    name="qualityProblems[${qcProblemIndex}][problem]">${problem}</textarea>
             </div>
 
         </div>
@@ -264,7 +278,17 @@ function addQCProblemRow(){
 window.onload = function () {
     calcQC();
     if(document.querySelector('input[name="has_problem"]:checked')?.value === "yes"){
-        toggleQCProblem();
+
+        document.getElementById("qc-problem-container").style.display = "block";
+
+        if(Array.isArray(existingQCProblems) && existingQCProblems.length > 0){
+            existingQCProblems.forEach(function(item){
+                addQCProblemRow(item);
+            });
+        } else {
+            addQCProblemRow();
+        }
+
     }else{
         toggleNoQCProblem();
     }

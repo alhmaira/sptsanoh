@@ -35,7 +35,6 @@ class ChangePasswordController extends Controller
 
         // SIMPAN PASSWORD BARU
         $user->password = Hash::make($request->password);
-        $user->first_login = false;
         $user->must_change_password = false;
         $user->save();
 

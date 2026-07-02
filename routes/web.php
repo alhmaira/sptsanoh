@@ -16,7 +16,7 @@
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\DB;
 
-    /*
+    /*Route::get('/change-password
     |--------------------------------------------------------------------------
     | PUBLIC ROUTES
     |--------------------------------------------------------------------------

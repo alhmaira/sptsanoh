@@ -204,8 +204,8 @@
     </a>
     @endif
 
-    {{-- Input Delivery: Warehouse & PPIC --}}
-    @if(in_array($userDept, ['Warehouse', 'PPIC']) || $userRole == 'Admin')
+    {{-- Input Delivery: Warehouse & PPIC & Purchasing --}}
+    @if(in_array($userDept, ['Warehouse', 'PPIC', 'Purchasing']) || $userRole == 'Admin')
     <a href="{{ url('/delivery/input') }}"
     class="{{ request()->is('delivery/input') ? 'active' : '' }}">
         <i class="fas fa-truck"></i>
@@ -213,7 +213,7 @@
     </a>
     @endif
 
-    @if($userDept == 'Quality Control' || $userRole == 'Admin')
+    @if($userDept == 'Quality Control' || $userDept == 'Purchasing' || $userRole == 'Admin')
     <a href="{{ url('/qc/inspection') }}"
     class="{{ request()->is('qc/inspection') ? 'active' : '' }}">
         <i class="fas fa-clipboard-list"></i>
@@ -221,8 +221,8 @@
     </a>
     @endif
 
-    {{-- Delivery History: Warehouse & PPIC --}}
-    @if(in_array($userDept, ['Warehouse', 'PPIC']) || $userRole == 'Admin')
+    {{-- Delivery History: Warehouse & PPIC & Purchasing --}}
+    @if(in_array($userDept, ['Warehouse', 'PPIC', 'Purchasing']) || $userRole == 'Admin')
     <a href="{{ url('/delivery/history') }}"
     class="{{ request()->is('delivery/history') ? 'active' : '' }}">
         <i class="fas fa-history"></i>
@@ -230,7 +230,7 @@
     </a>
     @endif
 
-    @if($userDept == 'Quality Control' || $userRole == 'Admin')
+    @if($userDept == 'Quality Control' || $userDept == 'Purchasing' || $userRole == 'Admin')
     <a href="{{ url('/qc/history') }}"
     class="{{ request()->is('qc/history') ? 'active' : '' }}">
         <i class="fas fa-check-double"></i>
@@ -248,6 +248,10 @@
 
     @if(
         $userRole == 'Admin'
+
+        ||
+
+        $userDept == 'Purchasing'
 
         ||
 

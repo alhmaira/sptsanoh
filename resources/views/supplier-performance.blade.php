@@ -1343,7 +1343,7 @@ Problem
 
 
 @php
-$qualityList = parseProblemData($data->qualityProblems ?? null);
+$qualityList = parseProblemData($qcData->qualityProblems ?? null);
 @endphp
 
 
