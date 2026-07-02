@@ -101,7 +101,6 @@
         <div class="field">
             <label>Delivery Method</label>
             <select id="del-method" onchange="calc()">
-                <option value="">Select method</option>
                 <option value="0">Normal</option>
                 <option value="4">Abnormal</option>
             </select>
@@ -117,7 +116,6 @@
         <div class="field">
             <label>DPS Reply</label>
             <select id="dps" onchange="calc()">
-                <option value="">Select reply</option>
                 <option value="0">On Time</option>
                 <option value="10">Delay</option>
                 <option value="20">No Reply</option>
@@ -759,50 +757,29 @@ async function saveDelivery(){
 
     let problems = [];
 
+    if (
+        document.querySelector('input[name="problem-status"]:checked')?.value === "yes"
+    ) {
 
-if(
- document.querySelector('input[name="problem-status"]:checked')?.value === "yes"
-){
+        document.querySelectorAll(".problem-item").forEach(item => {
 
+            problems.push({
 
-    problemData.forEach(i => {
+                partNo: item.querySelector('input[name="partNo"]').value,
 
+                partName: item.querySelector('input[name="partName"]').value,
 
-        const partNo =
-            document.getElementById(`part-no-${i}`).value;
+                remark: item.querySelector('textarea[name="remark"]').value
 
+            });
 
-        const partName =
-            document.getElementById(`part-name-${i}`).value;
+        });
 
+    } else {
 
-        const remark =
-    document.getElementById(`remark-${i}`).value;
+        problems = [];
 
-
-problems.push({
-
-    partNo,
-    partName,
-    remark
-
-});
-
-
-    });
-
-
-}else{
-
-
-    problems.push({
-
-        note:"Nothing Problem"
-
-    });
-
-
-}
+    }
 
     if(!selectedSupplier){
         showPopup(`⚠️ Please select Supplier from dropdown`);

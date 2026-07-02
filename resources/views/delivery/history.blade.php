@@ -117,12 +117,14 @@ let selectedSupplier = "";
 const data      = @json($deliveries);
 const approvals = @json($approvals);
 const userRole  = "{{ auth()->user()->role }}";
-const canEdit   = userRole === 'Admin' || userRole === 'Staff';
-
+const userDept  = "{{ auth()->user()->department }}";
 const tableBody   = document.getElementById("supplier-list");
 const detailCard  = document.getElementById("detailCard");
 const detailTable = document.getElementById("detail-table");
 const mainContent = document.getElementById("mainContent");
+const currentUser = @json($currentUser);
+const approvalHistories = @json($approvalHistories);
+
 let supplierList = [];
 /* =========================
    YEAR FILTER
@@ -192,6 +194,31 @@ function openEdit(id) {
     const d = data.find(x => x.id == id);
     if (!d) return;
     window.location.href = `/delivery/edit/${d.id}`;
+}
+
+function canEditDelivery(docNumber){
+
+    const allowed =
+        (
+            currentUser.department === 'PPIC' &&
+            ['Staff','Supervisor','Manager'].includes(currentUser.role)
+        ) ||
+        (
+            currentUser.department === 'Purchasing' &&
+            ['Leader','Manager'].includes(currentUser.role)
+        );
+
+    if(!allowed){
+        return false;
+    }
+
+    const alreadyApproved = approvalHistories.some(h =>
+        h.doc_number == docNumber &&
+        h.department == currentUser.department &&
+        h.user_name == currentUser.name
+    );
+
+    return !alreadyApproved;
 }
 
 /* =========================
@@ -366,15 +393,13 @@ function renderTable(filtered) {
                 <button class="table-view-btn" onclick="viewDetail(${d.id})">
                     <i class="fa-solid fa-eye"></i>
                 </button>
-                ${canEdit
-                    ? `<button
-                            class="table-edit-btn ${inApproval ? 'disabled' : ''}"
-                            onclick="${inApproval ? 'showEditBlocked()' : `openEdit(${d.id})`}"
-                            title="${inApproval ? 'Already in Approval' : 'Edit'}">
-                        <i class="fa-solid fa-pen"></i>
-                       </button>`
-                    : ''
-                }
+
+                <button
+                    class="table-edit-btn ${canEditDelivery(d.docNumber) ? '' : 'disabled'}"
+                    ${canEditDelivery(d.docNumber) ? `onclick="openEdit(${d.id})"` : 'disabled'}
+                    title="${canEditDelivery(d.docNumber) ? 'Edit' : 'You are not authorized to edit'}">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
             </td>
         `;
 
