@@ -198,17 +198,39 @@ function openEdit(id) {
 
 function canEditDelivery(docNumber){
 
-    const allowed =
-        (
-            currentUser.department === 'PPIC' &&
-            ['Staff','Supervisor','Manager'].includes(currentUser.role)
-        ) ||
-        (
-            currentUser.department === 'Purchasing' &&
-            ['Leader','Manager'].includes(currentUser.role)
-        );
+    const approvalStarted = !!approvals[docNumber];
 
-    if(!allowed){
+    let allowed = false;
+
+    if (!approvalStarted) {
+
+        // sebelum approval
+        allowed =
+            (
+                currentUser.department === 'PPIC' &&
+                ['Staff','Supervisor','Manager'].includes(currentUser.role)
+            ) ||
+            (
+                currentUser.department === 'Purchasing' &&
+                ['Leader','Manager'].includes(currentUser.role)
+            );
+
+    } else {
+
+        // sesudah approval dimulai
+        allowed =
+            (
+                currentUser.department === 'PPIC' &&
+                ['Supervisor','Manager'].includes(currentUser.role)
+            ) ||
+            (
+                currentUser.department === 'Purchasing' &&
+                ['Leader','Manager'].includes(currentUser.role)
+            );
+
+    }
+
+    if (!allowed) {
         return false;
     }
 
