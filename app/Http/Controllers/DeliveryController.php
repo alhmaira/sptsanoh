@@ -29,6 +29,8 @@ class DeliveryController extends Controller
 
     public function history()
     {
+        $user = auth()->user();
+
         $deliveries = Delivery::latest()->get()->map(function ($item) {
             $item->problems = json_decode($item->problems, true);
             return $item;
@@ -37,12 +39,18 @@ class DeliveryController extends Controller
         $approvals = DB::table('approvals')
             ->select('doc_number', 'status')
             ->get()
-            ->keyBy('doc_number')
-            ->toArray();
+            ->keyBy('doc_number');
 
-        return view('delivery.history', compact('deliveries', 'approvals'));
+        $approvalHistories = DB::table('approval_histories')->get();
+
+        return view('delivery.history', [
+            'deliveries'        => $deliveries,
+            'approvals'         => $approvals,
+            'approvalHistories' => $approvalHistories,
+            'currentUser'       => $user,
+        ]);
     }
-
+    
     public function edit($id)
     {
         $user = auth()->user();
@@ -74,14 +82,26 @@ class DeliveryController extends Controller
                 (
                     $user->department === 'IT' &&
                     $user->role === 'Admin'
+                )
+                ||
+                (
+                    $user->department === 'Purchasing' &&
+                    in_array($user->role, ['Leader', 'Manager'])
                 );
 
         } else {
 
             // Setelah approval dimulai
             $canEditDelivery =
-                $user->department === 'PPIC' &&
-                in_array($user->role, ['Supervisor', 'Manager']);
+                (
+                    $user->department === 'PPIC' &&
+                    in_array($user->role, ['Supervisor', 'Manager'])
+                )
+                ||
+                (
+                    $user->department === 'Purchasing' &&
+                    in_array($user->role, ['Leader', 'Manager'])
+                );
 
         }
 
@@ -152,13 +172,25 @@ class DeliveryController extends Controller
                 (
                     $user->department === 'IT' &&
                     $user->role === 'Admin'
+                )
+                ||
+                (
+                    $user->department === 'Purchasing' &&
+                    in_array($user->role, ['Leader', 'Manager'])
                 );
 
         } else {
 
             $canEditDelivery =
-                $user->department === 'PPIC' &&
-                in_array($user->role, ['Supervisor', 'Manager']);
+                (
+                    $user->department === 'PPIC' &&
+                    in_array($user->role, ['Supervisor', 'Manager'])
+                )
+                ||
+                (
+                    $user->department === 'Purchasing' &&
+                    in_array($user->role, ['Leader', 'Manager'])
+                );
 
         }
 

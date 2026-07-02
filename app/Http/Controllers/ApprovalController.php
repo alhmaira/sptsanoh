@@ -19,50 +19,18 @@ class ApprovalController extends Controller
         ["role" => "Manager",         "dept" => "Purchasing"],
         ["role" => "General Manager", "dept" => "Production"]
     ];
-
-    /** Role yang boleh edit QC (hanya Quality Control). */
-    private $editQcRoles = ["Supervisor", "Manager"];
-
-    /** Role yang boleh edit Delivery (hanya PPIC). */
-    private $editDeliveryRoles = ["Supervisor", "Manager"];
-
     public function index()
     {
         $qcData       = DB::table('qc')->get();
         $deliveryData = DB::table('delivery')->get();
         $approvalData = DB::table('approvals')->get();
         $historyData  = DB::table('approval_histories')->get();
-
-        $user = auth()->user();
-
-        /*
-         * canEditQC = true jika Supervisor atau Manager Quality Control.
-         * Pengecekan per-dokumen (sudah approve atau belum) dilakukan di JS.
-         */
-        $canEditQC = (
-            $user->department === 'Quality Control' &&
-            in_array($user->role, $this->editQcRoles)
-        );
-
-        /*
-         * canEditDelivery = true jika Supervisor atau Manager PPIC.
-         * Pengecekan per-dokumen (sudah approve atau belum) dilakukan di JS.
-         */
-        $canEditDelivery = (
-            $user->department === 'PPIC' &&
-            in_array($user->role, $this->editDeliveryRoles)
-        );
-
-        $editPerms = ($user->department === 'Quality Control') ? ['qc'] : [];
-
+        
         return view('approval', [
             'qcData'          => $qcData,
             'deliveryData'    => $deliveryData,
             'approvalData'    => $approvalData,
             'historyData'     => $historyData,
-            'editPerms'       => $editPerms,
-            'canEditQC'       => $canEditQC,
-            'canEditDelivery' => $canEditDelivery,
         ]);
     }
 

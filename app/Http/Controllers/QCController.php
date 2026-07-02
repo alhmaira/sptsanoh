@@ -52,53 +52,28 @@ class QCController extends Controller
         $user = auth()->user();
         $qc   = QC::findOrFail($id);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cek apakah approval sudah dimulai
-        |--------------------------------------------------------------------------
-        */
-        $approvalStarted = DB::table('approval_histories')
-            ->where('doc_number', $qc->docNumber)
-            ->exists();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Permission
-        |--------------------------------------------------------------------------
-        */
-        if (!$approvalStarted) {
-
-            // sebelum approval
-            $canEditQC =
-                (
-                    $user->department === 'Quality Control' &&
-                    in_array($user->role, ['Staff', 'Supervisor', 'Manager'])
-                )
-                ||
-                (
-                    $user->department === 'IT' &&
-                    $user->role === 'Admin'
-                );
-
-        } else {
-
-            // setelah approval dimulai
-            $canEditQC =
-                $user->department === 'Quality Control' &&
-                in_array($user->role, ['Supervisor', 'Manager']);
-
-        }
+        $canEditQC =
+        (
+            $user->department === 'Quality Control' &&
+            in_array($user->role, ['Staff','Supervisor','Manager'])
+        )
+        ||
+        (
+            $user->department === 'Purchasing' &&
+            in_array($user->role, ['Leader','Manager'])
+        )
+        ||
+        (
+            $user->department === 'IT' &&
+            $user->role === 'Admin'
+        );
 
         if (!$canEditQC) {
             return redirect()->back()
                 ->with('error', 'You are not authorized to edit QC data.');
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Sudah fully approved?
-        |--------------------------------------------------------------------------
-        */
+        
         $approval = DB::table('approvals')
             ->where('doc_number', $qc->docNumber)
             ->first();
@@ -108,22 +83,20 @@ class QCController extends Controller
                 ->with('error', 'Cannot edit - document is already fully approved.');
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | User ini sudah approve?
-        |--------------------------------------------------------------------------
-        */
         $alreadyApproved = DB::table('approval_histories')
-            ->where('doc_number', $qc->docNumber)
-            ->where('user_name', $user->name)
-            ->exists();
+        ->where('doc_number', $qc->docNumber)
+        ->where('department', $user->department)
+        ->exists();
 
         if ($alreadyApproved) {
             return redirect('/qc/history')
                 ->with('error', 'Cannot edit - you have already approved this document.');
         }
 
+        $qc->qualityProblems = json_decode($qc->qualityProblems, true) ?? [];
+
         return view('qc.edit', compact('qc'));
+
     }
 
     public function update(Request $request, $id)
@@ -131,39 +104,33 @@ class QCController extends Controller
         $user = auth()->user();
         $qc   = QC::findOrFail($id);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cek apakah approval sudah dimulai
-        |--------------------------------------------------------------------------
-        */
-        $approvalStarted = DB::table('approval_histories')
-            ->where('doc_number', $qc->docNumber)
-            ->exists();
+        $canEditQC =
+        (
+            $user->department === 'Quality Control' &&
+            in_array($user->role, ['Staff', 'Supervisor', 'Manager'])
+        )
+        ||
+        (
+            $user->department === 'Purchasing' &&
+            in_array($user->role, ['Leader', 'Manager'])
+        )
+        ||
+        (
+            $user->department === 'IT' &&
+            $user->role === 'Admin'
+        );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Permission
-        |--------------------------------------------------------------------------
-        */
-        if (!$approvalStarted) {
+        if (!$canEditQC) {
 
-            $canEditQC =
-                (
-                    $user->department === 'Quality Control' &&
-                    in_array($user->role, ['Staff', 'Supervisor', 'Manager'])
-                )
-                ||
-                (
-                    $user->department === 'IT' &&
-                    $user->role === 'Admin'
-                );
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You are not authorized to edit QC data.'
+                ], 403);
+            }
 
-        } else {
-
-            $canEditQC =
-                $user->department === 'Quality Control' &&
-                in_array($user->role, ['Supervisor', 'Manager']);
-
+            return redirect()->back()
+                ->with('error', 'You are not authorized to edit QC data.');
         }
 
         if (!$canEditQC) {
@@ -207,9 +174,9 @@ class QCController extends Controller
         |--------------------------------------------------------------------------
         */
         $alreadyApproved = DB::table('approval_histories')
-            ->where('doc_number', $qc->docNumber)
-            ->where('user_name', $user->name)
-            ->exists();
+        ->where('doc_number', $qc->docNumber)
+        ->where('department', $user->department)
+        ->exists();
 
         if ($alreadyApproved) {
 
@@ -230,15 +197,17 @@ class QCController extends Controller
         |--------------------------------------------------------------------------
         */
         $qc->update([
-            'lineStop'    => $request->lineStop,
-            'ng'          => $request->ng,
-            'supply'      => $request->supply,
-            'ppm'         => $request->ppm,
-            'ppmScore'    => $request->ppmScore,
-            'rank_score'  => $request->rank_score,
-            'fppk'        => $request->fppk,
-            'total_score' => $request->total_score,
-            'updated_by'  => $user->name,
+            'lineStop'        => $request->lineStop,
+            'ng'              => $request->ng,
+            'supply'          => $request->supply,
+            'ppm'             => $request->ppm,
+            'ppmScore'        => $request->ppmScore,
+            'rank_score'      => $request->rank_score,
+            'fppk'            => $request->fppk,
+            'total_score'     => $request->total_score,
+            'has_problem'     => $request->has_problem ?? 'no',
+            'qualityProblems' => json_encode($request->qualityProblems ?? []),
+            'updated_by'      => $user->name,
         ]);
 
         if ($request->expectsJson() || $request->ajax()) {
@@ -294,6 +263,11 @@ class QCController extends Controller
 
         $validated['updated_by'] = null;
 
+        $validated['has_problem'] = $request->has_problem;
+
+        $validated['quality_problems'] = json_encode(
+            $request->qualityProblems ?? []
+        );
 
         QC::create($validated);
 
