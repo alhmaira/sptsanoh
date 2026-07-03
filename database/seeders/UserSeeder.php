@@ -23,61 +23,6 @@ class UserSeeder extends Seeder
                 'department' => 'IT',
             ],
 
-            [
-                'name' => 'General Manager',
-                'email' => 'gm@spt.com',
-                'password' => Hash::make('password123'),
-                'role' => 'GM',
-                'department' => 'Management',
-            ],
-
-            [
-                'name' => 'Manager Purchasing',
-                'email' => 'manager.purch@spt.com',
-                'password' => Hash::make('password123'),
-                'role' => 'Manager Purchasing',
-                'department' => 'Purchasing',
-            ],
-
-            [
-                'name' => 'Leader Purchasing',
-                'email' => 'leader.purch@spt.com',
-                'password' => Hash::make('password123'),
-                'role' => 'Leader Purchasing',
-                'department' => 'Purchasing',
-            ],
-
-            [
-                'name' => 'Manager PPIC',
-                'email' => 'manager.ppic@spt.com',
-                'password' => Hash::make('password123'),
-                'role' => 'Manager PPIC',
-                'department' => 'PPIC',
-            ],
-
-            [
-                'name' => 'SPV PPIC',
-                'email' => 'spv.ppic@spt.com',
-                'password' => Hash::make('password123'),
-                'role' => 'SPV PPIC',
-                'department' => 'PPIC',
-            ],
-
-            [
-                'name' => 'Manager QC',
-                'email' => 'manager.qc@spt.com',
-                'password' => Hash::make('password123'),
-                'role' => 'Manager QC',
-                'department' => 'QC',
-            ],
-
-            [
-                'name' => 'SPV QC',
-                'email' => 'spv.qc@spt.com',
-                'password' => Hash::make('password123'),
-                'role' => 'SPV QC',
-                'department' => 'QC',
-            ],
 
         ];
 
