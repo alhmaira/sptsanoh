@@ -25,12 +25,30 @@ class ApprovalController extends Controller
         $deliveryData = DB::table('delivery')->get();
         $approvalData = DB::table('approvals')->get();
         $historyData  = DB::table('approval_histories')->get();
-        
+
+        $user = auth()->user();
+
+        // QC roles (Supervisor/Manager - Quality Control) can edit QC data
+        $canEditQC = in_array($user->role, ['Supervisor', 'Manager'])
+            && $user->department === 'Quality Control';
+
+        // PPIC roles (Supervisor/Manager - PPIC) can edit delivery data
+        $canEditDelivery = in_array($user->role, ['Supervisor', 'Manager'])
+            && $user->department === 'PPIC';
+
+        $editPerms = [
+            'canEditQC'       => $canEditQC,
+            'canEditDelivery' => $canEditDelivery,
+        ];
+
         return view('approval', [
             'qcData'          => $qcData,
             'deliveryData'    => $deliveryData,
             'approvalData'    => $approvalData,
             'historyData'     => $historyData,
+            'canEditQC'       => $canEditQC,
+            'canEditDelivery' => $canEditDelivery,
+            'editPerms'       => $editPerms,
         ]);
     }
 
@@ -103,6 +121,8 @@ class ApprovalController extends Controller
 
         DB::table('approval_histories')->insert([
             'doc_number'  => $doc,
+            'user_id'     => $user->id,
+            'step'        => $step,
             'user_name'   => $user->name,
             'role_name'   => $user->role,
             'department'  => $user->department,

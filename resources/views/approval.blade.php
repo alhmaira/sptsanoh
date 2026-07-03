@@ -715,8 +715,6 @@ function showDetail(doc) {
     const userStep    = getCurrentUserStep();
 
     const canApprove        = wf.step === userStep && wf.status !== "APPROVED";
-    const showEditQCButton  = canEditQCForDoc(doc);
-    const showEditDelButton = canEditDeliveryForDoc(doc);
 
     /* ---- DELIVERY HELPERS ---- */
     function getOTDText(value) {
@@ -786,35 +784,6 @@ function showDetail(doc) {
 
     if (canApprove) {
         actionButtons += `<button class="btn-approve" onclick="openConfirm('${doc}','APPROVED')">Approve</button>`;
-    }
-
-    if (showEditQCButton) {
-        actionButtons += `<button class="btn-edit-qc"
-            onclick="window.location.href='/qc/edit/${data.id || data.docNumber}'">
-            Edit QC
-        </button>`;
-    }
-
-    if (showEditDelButton) {
-        const safeSupplier = (data.supplier || '').replace(/'/g, "\\'");
-        const safePeriod   = (data.period   || '').replace(/'/g, "\\'");
-
-        actionButtons += `<button class="btn-edit-qc"
-            onclick="openEditDelivery(
-                '${doc}',
-                ${del.id || 'null'},
-                '${safeSupplier}',
-                '${safePeriod}',
-                '${del.qty_ord     ?? '-'}',
-                '${del.qty_rec     ?? '-'}',
-                '${del.fulfillment ?? '-'}',
-                ${del.otd          ?? 0},
-                ${del.del_method   ?? 0},
-                ${del.premium      ?? 0},
-                ${del.dps          ?? 0}
-            )">
-            Edit Delivery
-        </button>`;
     }
 
     container.innerHTML = `
@@ -1041,6 +1010,8 @@ function calcPremiumIndex(val) {
 /*
  * openEditDelivery — hitung sQty dari fulfillment, simpan sQty + otd ke dataset.
  * Tidak butuh apiScore atau totalScoreDB sama sekali.
+ * Fungsi ini tidak lagi dipanggil dari tombol manapun di halaman Approval
+ * (tombol Edit Delivery sudah dihapus), dibiarkan tetap ada untuk jaga-jaga.
  */
 function openEditDelivery(docNumber, deliveryId, supplier, period, qtyOrd, qtyRec, fulfillment, otd, delMethod, premium, dps) {
     editDeliveryDocNumber = docNumber;
