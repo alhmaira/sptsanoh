@@ -25,21 +25,6 @@
 
     <div class="grid2">
 
-        {{-- SUPPLIER --}}
-        <div class="field">
-            <label>Supplier</label>
-            <div class="dropdown">
-                <input type="text" id="supplierSearch" placeholder="Search Supplier..." onclick="toggleSupplierDropdown()" onkeyup="filterSuppliers()">
-                <div id="supplierDropdown" class="dropdown-list"></div>
-            </div>
-        </div>
-
-        {{-- CREATED --}}
-        <div class="field">
-            <label>Created On</label>
-            <input type="text" id="created-on" readonly>
-        </div>
-
         {{-- MONTH --}}
         <div class="field">
             <label>Month</label>
@@ -64,6 +49,21 @@
         <div class="field">
             <label>Year</label>
             <select id="del-year" onchange="periodChanged()"></select>
+        </div>
+
+        {{-- SUPPLIER --}}
+        <div class="field">
+            <label>Supplier</label>
+            <div class="dropdown">
+                <input type="text" id="supplierSearch" placeholder="Search Supplier..." onclick="toggleSupplierDropdown()" onkeyup="filterSuppliers()">
+                <div id="supplierDropdown" class="dropdown-list"></div>
+            </div>
+        </div>
+
+        {{-- CREATED --}}
+        <div class="field">
+            <label>Created On</label>
+            <input type="text" id="created-on" readonly>
         </div>
 
         {{-- OTD --}}
@@ -182,7 +182,7 @@
     <div class="popup-box">
 
         <p id="popup-message">
-            ✔ `${docNumber} saved successfully'
+            `✔ ${result.docNumber} saved successfully'
         </p>
 
         <button onclick="closePopup()">
@@ -202,6 +202,9 @@
 let supplierData = [];
 let selectedSupplier = "";
 let problemData = [];
+
+// Guard flag untuk mencegah double submit
+let isSavingDelivery = false;
 
 console.log("DELIVERY PAGE LOADED");
 
@@ -401,8 +404,22 @@ async function loadSupplierPeriod(){
 
         if(result.success){
 
-            supplierData =
-                result.suppliers;
+            // Dedup supplier by name (case-insensitive) supaya dropdown
+            // tidak menampilkan supplier yang sama lebih dari sekali,
+            // walau ada beberapa baris sync untuk supplier itu di periode ini.
+            const seen = new Set();
+
+            supplierData = result.suppliers.filter(s => {
+
+                const key = (s.supplier_name || "").trim().toLowerCase();
+
+                if(!key || seen.has(key)){
+                    return false;
+                }
+
+                seen.add(key);
+                return true;
+            });
 
             buildSupplierDropdown(
                 supplierData
@@ -646,16 +663,16 @@ function fillSupplierData(s){
     // AUTO SET OTD
     let otdValue = 0;
 
-    if(s.on_time_deliveries == 1){
+    if(s.total_delay_days == 1){
         otdValue = 2;
     }
-    else if(s.on_time_deliveries == 2){
+    else if(s.total_delay_days == 2){
         otdValue = 4;
     }
-    else if(s.on_time_deliveries == 3){
+    else if(s.total_delay_days == 3){
         otdValue = 6;
     }
-    else if(s.on_time_deliveries > 3){
+    else if(s.total_delay_days > 3){
         otdValue = 10;
     }
 
@@ -728,18 +745,23 @@ document.addEventListener("click", function(e){
 });
 
 /* =========================
-   SAVE DATABASE
+   SAVE DATABASE (dengan proteksi double submit)
 ========================= */
 
 async function saveDelivery(){
 
     console.log("BUTTON CLICKED");
 
+    // Jika masih dalam proses saving, abaikan klik berikutnya
+    if(isSavingDelivery){
+        return;
+    }
+
     // VALIDASI
     const fields = [
-        { id: "supplierSearch",  label: "Supplier" },
         { id: "del-month",       label: "Month" },
         { id: "del-year",        label: "Year" },
+        { id: "supplierSearch",  label: "Supplier" },
         { id: "otd",             label: "On-Time Delivery" },
         { id: "qty-ord",         label: "Quantity Ordered" },
         { id: "qty-rec",         label: "Quantity Received" },
@@ -753,6 +775,11 @@ async function saveDelivery(){
             showPopup(`⚠️ "${f.label}" is required`);
             return;
         }
+    }
+
+    if(!selectedSupplier){
+        showPopup(`⚠️ Please select Supplier from dropdown`);
+        return;
     }
 
     let problems = [];
@@ -781,55 +808,26 @@ async function saveDelivery(){
 
     }
 
-    if(!selectedSupplier){
-        showPopup(`⚠️ Please select Supplier from dropdown`);
-        return;
-    }
-    const docNumber =
-        "DELQC-" + Date.now();
-
     const payload = {
+        delMonth: document.getElementById("del-month").value,
+        delYear: document.getElementById("del-year").value,
+        supplierSearch: document.getElementById("supplierSearch").value,
+        createdOn: document.getElementById("created-on").value,
 
-        docNumber:
-            docNumber,
-
-        supplierSearch:
-            document.getElementById("supplierSearch").value,
-
-        createdOn:
-            document.getElementById("created-on").value,
-
-        delMonth:
-            document.getElementById("del-month").value,
-
-        delYear:
-            document.getElementById("del-year").value,
-
-        otd:
-            document.getElementById("otd").value,
-
-        qtyOrd:
-            document.getElementById("qty-ord").value,
-
-        qtyRec:
-            document.getElementById("qty-rec").value,
-
-        fulfillment:
-            document.getElementById("fulfillment").value,
-
-        delMethod:
-            document.getElementById("del-method").value,
-
-        premium:
-            document.getElementById("premium").value,
-
-        dps:
-            document.getElementById("dps").value,
+        otd: document.getElementById("otd").value,
+        qtyOrd: document.getElementById("qty-ord").value,
+        qtyRec: document.getElementById("qty-rec").value,
+        fulfillment: document.getElementById("fulfillment").value,
+        delMethod: document.getElementById("del-method").value,
+        premium: document.getElementById("premium").value,
+        dps: document.getElementById("dps").value,
 
         problems: problems.length ? problems : null,
 
         hasProblem:
-        document.querySelector('input[name="problem-status"]:checked')?.value ?? "no",
+            document.querySelector(
+                'input[name="problem-status"]:checked'
+            )?.value ?? "no",
 
         totalScore:
             document.getElementById("total-score").textContent
@@ -838,6 +836,16 @@ async function saveDelivery(){
     console.log("PROBLEMS:", problems);
 
     console.log("PAYLOAD:", payload);
+
+    // Ambil tombol save & disable selama proses berlangsung
+    const saveBtn = document.querySelector(".form-card .btn-save");
+
+    isSavingDelivery = true;
+
+    if(saveBtn){
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving...";
+    }
 
     try{
 
@@ -878,21 +886,39 @@ async function saveDelivery(){
                 "popup-message"
             ).textContent =
 
-                `✔ ${docNumber} saved successfully`;
+                `✔ ${result.docNumber} saved successfully`;
 
             document.getElementById("popup")
                 .style.display = "flex";
 
+            // Tombol sengaja tidak di-enable lagi karena halaman
+            // akan redirect ke history begitu popup ditutup (lihat closePopup)
+
         }else{
 
-            alert("Laravel Error Check Console");
+            // Backend menolak (misal validasi gagal / duplikat) -> re-enable tombol
+            showPopup(result.message || "Failed to save data. Please try again.");
+
+            if(saveBtn){
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Save Data";
+            }
+
+            isSavingDelivery = false;
         }
 
     }catch(error){
 
         console.error("FETCH ERROR:", error);
 
-        alert("Failed save delivery data");
+        showPopup("Failed to save delivery data. Please try again.");
+
+        if(saveBtn){
+            saveBtn.disabled = false;
+            saveBtn.textContent = "Save Data";
+        }
+
+        isSavingDelivery = false;
     }
 }
 function showPopup(message){

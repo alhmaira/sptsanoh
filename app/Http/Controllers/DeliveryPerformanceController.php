@@ -48,7 +48,6 @@ class DeliveryPerformanceController extends Controller
 
 
 
-            // ambil supplier yang sudah pernah input delivery
             $existingSupplier = Delivery::where('del_month',$month)
                 ->where('del_year',$year)
                 ->pluck('supplierSearch')
@@ -60,7 +59,6 @@ class DeliveryPerformanceController extends Controller
 
             ->filter(function($item) use ($existingSupplier){
 
-                // buang supplier yang sudah ada
                 return !in_array(
                     $item['supplier_name'],
                     $existingSupplier
@@ -85,8 +83,8 @@ class DeliveryPerformanceController extends Controller
                         $item['total_receipt_qty'] ?? 0,
 
 
-                    'on_time_deliveries' =>
-                        $item['on_time_deliveries'] ?? 0,
+                    'total_delay_days' =>
+                        $item['total_delay_days'] ?? 0,
 
                 ];
 

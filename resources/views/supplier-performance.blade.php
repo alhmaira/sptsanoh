@@ -35,10 +35,10 @@ body {
 }
 
 
-.sheet-border{
-    border:1px solid #000;
-    padding:6px;
-    overflow:hidden;
+.sheet-border {
+    border: 1px solid #000;
+    padding: 6px 6px 15px 6px;
+    overflow: hidden;
 }
 
     .header-table {
@@ -280,72 +280,82 @@ table{
 td[style*="width:50%"]{
     border:none !important;
 }
-
 /* ================= CRITERIA TABLE ================= */
 
-.criteria-wrapper{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:2px !important;
+.criteria-wrapper {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 2px !important;
+}
+
+.criteria-wrapper > tbody > tr > td {
+    vertical-align: top;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* LEFT CRITERIA */
+.criteria-wrapper > tbody > tr > td:first-child {
+    width: 50%;
+    padding-left: 3px !important;
+    padding-right: 4px !important;
+}
+
+/* RIGHT CRITERIA */
+.criteria-wrapper > tbody > tr > td:last-child {
+    width: 50%;
+    padding-left: 4px !important;
+    padding-right: 0 !important;
 }
 
 
-.criteria-wrapper td{
-    width:50%;
-    vertical-align:top;
-    border:none;
-    padding:0 !important;
-    
-}
-
-
-.criteria-table{
-    border-collapse:collapse;
-    table-layout:fixed;
+.criteria-table {
+    width: 100% !important;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 0 !important;
 }
 
 
 .criteria-table th,
-.criteria-table td{
+.criteria-table td {
+    border: 1px solid #000;
 
-    border:1px solid #000;
+    padding: 1px 2px !important;
 
-    padding:1px 2px !important;
+    font-size: 7px !important;
 
-    font-size:7px !important;
+    line-height: 1 !important;
 
-    line-height:1 !important;
+    height: auto !important;
 
-    height:auto !important;
+    vertical-align: middle;
 
-    vertical-align:middle;
-
+    box-sizing: border-box;
 }
 
 
-.criteria-table th{
-    background:#00a8d8;
-    font-weight:bold;
-    text-align:center;
+.criteria-table th {
+    background: #00a8d8;
+    font-weight: bold;
+    text-align: center;
 }
 
 
-.criteria-table td{
-    text-align:center;
+.criteria-table td {
+    text-align: center;
 }
 
 
-.criteria-table .left-text{
-    text-align:left !important;
+.criteria-table .left-text,
+.left-text {
+    text-align: left !important;
 }
 
-
-
-.left-text{
-    text-align:left !important;
+.criteria-wrapper > tbody > tr > td:first-child .criteria-table {
+    width: calc(100% - 4px) !important;
 }
-
-
 
 /* ================= DELIVERY TABLE ================= */
 
@@ -596,21 +606,27 @@ function getSignatureImage($signature)
 
 function parseProblemData($data)
 {
-    if(!$data){
+    if (empty($data)) {
         return [];
     }
 
-    if(is_string($data)){
-
-        $decoded = json_decode($data,true);
-
-        if(json_last_error() === JSON_ERROR_NONE){
-            return $decoded;
-        }
-
+    // Kalau sudah array
+    if (is_array($data)) {
+        return $data;
     }
 
-    return $data;
+    // Kalau JSON string
+    if (is_string($data)) {
+
+        $decoded = json_decode($data, true);
+
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+    }
+
+    // Selalu return array supaya aman untuk count()
+    return [];
 }
 
 @endphp
@@ -1601,7 +1617,7 @@ Nothing Problem
 
 </td>
 
-<td style="width:50%; vertical-align:top; border:none;">
+<td style="width:100%; vertical-align:top; border:none;">
 
     <table class="grade-table" style="width:100%;">
         <tr>
@@ -1644,7 +1660,7 @@ Nothing Problem
 <tr>
 
 <td style="width:50%; vertical-align:top;">
-<table class="criteria-table">
+<table class="criteria-table" style="width:100%; margin-top:0;">
 
 
 <tr>

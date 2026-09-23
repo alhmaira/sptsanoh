@@ -281,8 +281,50 @@ class DeliveryController extends Controller
     {
         try {
 
+            // =========================
+            // GENERATE DOCUMENT NUMBER
+            // =========================
+
+            $year = now()->format('y');
+
+            $lastDelivery = Delivery::where(
+                'docNumber',
+                'like',
+                "SPT-{$year}A%"
+            )
+            ->orderBy('docNumber', 'desc')
+            ->first();
+
+            if ($lastDelivery) {
+
+                $lastNumber = (int) substr(
+                    $lastDelivery->docNumber,
+                    -3
+                );
+
+                $nextNumber = $lastNumber + 1;
+
+            } else {
+
+                $nextNumber = 1;
+
+            }
+
+            $docNumber = "SPT-{$year}A" .
+                str_pad(
+                    $nextNumber,
+                    3,
+                    '0',
+                    STR_PAD_LEFT
+                );
+
+
+            // =========================
+            // SAVE DELIVERY
+            // =========================
+
             Delivery::create([
-                'docNumber'      => $request->docNumber,
+                'docNumber'      => $docNumber,
                 'supplierSearch' => $request->supplierSearch,
                 'createdOn'      => $request->createdOn,
                 'del_month'      => $request->delMonth,
@@ -301,8 +343,10 @@ class DeliveryController extends Controller
                 'updatedBy'      => null,
             ]);
 
+
             return response()->json([
-                'success' => true
+                'success'   => true,
+                'docNumber' => $docNumber
             ]);
 
         } catch (\Exception $e) {
