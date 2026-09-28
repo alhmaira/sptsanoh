@@ -5,6 +5,19 @@
 
 @push('head')
 <link rel="stylesheet" href="{{ asset('css/delivery.css') }}">
+<style>
+    .input-error {
+        border: 1px solid #dc2626 !important;
+        box-shadow: 0 0 0 1px #dc2626 !important;
+        background-color: #fef2f2;
+    }
+    .radio-group-error {
+        border: 1px solid #dc2626;
+        border-radius: 6px;
+        padding: 6px 10px;
+        background-color: #fef2f2;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -125,7 +138,7 @@
         {{-- DELIVERY PROBLEM --}}
         <div class="field">
             <label>Delivery Problem</label>
-            <div style="display:flex;align-items:center;gap:15px;">
+            <div id="problem-radio-group" style="display:flex;align-items:center;gap:15px;">
                 <label style="display:flex;align-items:center;gap:6px;">
                     <input type="radio" name="problem-status" id="has-problem" value="yes" onchange="toggleProblem()">
                     Yes
@@ -745,6 +758,44 @@ document.addEventListener("click", function(e){
 });
 
 /* =========================
+   FIELD ERROR HIGHLIGHT
+========================= */
+
+function markFieldError(el){
+    if(!el) return;
+    el.classList.add("input-error");
+}
+
+function markRadioGroupError(){
+    const group = document.getElementById("problem-radio-group");
+    if(group) group.classList.add("radio-group-error");
+}
+
+function clearFieldErrors(){
+    document.querySelectorAll(".input-error").forEach(el => {
+        el.classList.remove("input-error");
+    });
+
+    const group = document.getElementById("problem-radio-group");
+    if(group) group.classList.remove("radio-group-error");
+}
+
+// Hilangkan highlight error begitu user mulai mengisi/mengubah field
+document.querySelectorAll(
+    "#del-month, #del-year, #supplierSearch, #otd, #qty-ord, #qty-rec, #del-method, #premium, #dps"
+).forEach(el => {
+    el.addEventListener("input", () => el.classList.remove("input-error"));
+    el.addEventListener("change", () => el.classList.remove("input-error"));
+});
+
+document.querySelectorAll('input[name="problem-status"]').forEach(el => {
+    el.addEventListener("change", () => {
+        const group = document.getElementById("problem-radio-group");
+        if(group) group.classList.remove("radio-group-error");
+    });
+});
+
+/* =========================
    SAVE DATABASE (dengan proteksi double submit)
 ========================= */
 
@@ -757,7 +808,9 @@ async function saveDelivery(){
         return;
     }
 
-    // VALIDASI
+    clearFieldErrors();
+
+    // VALIDASI — semua field di bawah ini wajib diisi
     const fields = [
         { id: "del-month",       label: "Month" },
         { id: "del-year",        label: "Year" },
@@ -766,27 +819,56 @@ async function saveDelivery(){
         { id: "qty-ord",         label: "Quantity Ordered" },
         { id: "qty-rec",         label: "Quantity Received" },
         { id: "del-method",      label: "Delivery Method" },
+        { id: "premium",         label: "Premium Freight" },
         { id: "dps",             label: "DPS Reply" },
     ];
 
+    let firstInvalid = null;
+    let missingLabels = [];
+
     for(let f of fields){
-        const val = document.getElementById(f.id).value.trim();
-        if(!val || val === ""){
-            showPopup(`⚠️ "${f.label}" is required`);
-            return;
+        const el = document.getElementById(f.id);
+        const val = el.value.trim();
+
+        if(!val){
+            markFieldError(el);
+            missingLabels.push(f.label);
+            if(!firstInvalid) firstInvalid = el;
         }
     }
 
     if(!selectedSupplier){
-        showPopup(`⚠️ Please select Supplier from dropdown`);
+        const supplierEl = document.getElementById("supplierSearch");
+        markFieldError(supplierEl);
+        if(!missingLabels.includes("Supplier")) missingLabels.push("Supplier");
+        if(!firstInvalid) firstInvalid = supplierEl;
+    }
+
+    const problemChecked =
+        document.querySelector('input[name="problem-status"]:checked');
+
+    if(!problemChecked){
+        markRadioGroupError();
+        missingLabels.push("Delivery Problem");
+        if(!firstInvalid) firstInvalid = document.getElementById("has-problem");
+    }
+
+    if(missingLabels.length > 0){
+        showPopup(
+            `Please fill in all required fields ${missingLabels.join(", ")}`
+        );
+
+        if(firstInvalid && typeof firstInvalid.focus === "function"){
+            firstInvalid.focus();
+            firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
         return;
     }
 
     let problems = [];
 
-    if (
-        document.querySelector('input[name="problem-status"]:checked')?.value === "yes"
-    ) {
+    if (problemChecked.value === "yes") {
 
         document.querySelectorAll(".problem-item").forEach(item => {
 
@@ -824,10 +906,7 @@ async function saveDelivery(){
 
         problems: problems.length ? problems : null,
 
-        hasProblem:
-            document.querySelector(
-                'input[name="problem-status"]:checked'
-            )?.value ?? "no",
+        hasProblem: problemChecked.value,
 
         totalScore:
             document.getElementById("total-score").textContent

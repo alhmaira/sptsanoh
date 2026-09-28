@@ -77,6 +77,29 @@ function closePopup(){
 }
 
 /* =========================
+   FIELD ERROR HIGHLIGHT
+========================= */
+function markFieldError(el){
+    if(!el) return;
+    el.classList.add("input-error");
+}
+
+function markRadioGroupError(){
+    const group = document.getElementById("qc-problem-radio-group");
+    if(group) group.classList.add("radio-group-error");
+}
+
+function clearFieldErrors(){
+
+    document.querySelectorAll(".input-error").forEach(el => {
+        el.classList.remove("input-error");
+    });
+
+    const group = document.getElementById("qc-problem-radio-group");
+    if(group) group.classList.remove("radio-group-error");
+}
+
+/* =========================
    FORMAT PERIOD
 ========================= */
 function formatPeriod(month, year){
@@ -140,6 +163,8 @@ function renderDropdown(list){
 
             document.getElementById("deliverySearch").value =
                 `${d.supplierSearch} (${formatPeriod(d.del_month, d.del_year)})`;
+
+            document.getElementById("deliverySearch").classList.remove("input-error");
 
             dropdown.style.display = "none";
 
@@ -208,6 +233,10 @@ function showDetail(d){
             <label>Line Stop</label>
 
             <select id="lineStop" onchange="calcQC()">
+
+                <option value="">
+                    Select status
+                </option>
 
                 <option value="40">
                     Yes
@@ -312,7 +341,7 @@ function showDetail(d){
         {{-- QUALITY PROBLEM --}}
         <div class="field">
             <label>Quality Problem</label>
-            <div style="display:flex;align-items:center;gap:15px;">
+            <div id="qc-problem-radio-group" style="display:flex;align-items:center;gap:15px;">
                 <label style="display:flex;align-items:center;gap:6px;">
                     <input type="radio"
                         name="qc-problem-status"
@@ -362,6 +391,23 @@ function showDetail(d){
 
     document.getElementById("supply").value =
         Number(d.qty_rec || 0);
+
+    // Hilangkan highlight error begitu user mengisi/mengubah field
+    // (elemen-elemen ini baru ada setelah detail di-render, jadi listener
+    // dipasang di sini, bukan sekali di awal seperti di halaman Delivery)
+    document.querySelectorAll(
+        "#lineStop, #ng, #rank, #fppk"
+    ).forEach(el => {
+        el.addEventListener("input", () => el.classList.remove("input-error"));
+        el.addEventListener("change", () => el.classList.remove("input-error"));
+    });
+
+    document.querySelectorAll('input[name="qc-problem-status"]').forEach(el => {
+        el.addEventListener("change", () => {
+            const group = document.getElementById("qc-problem-radio-group");
+            if(group) group.classList.remove("radio-group-error");
+        });
+    });
 }
 
 function toggleQCProblem(){
@@ -521,18 +567,73 @@ function calcQC(){
 ========================= */
 async function saveQC(){
 
+    clearFieldErrors();
+
+    let firstInvalid = null;
+    let missingLabels = [];
+
     if(!selectedDoc){
 
-        showPopup("Select delivery first");
+        const deliveryEl = document.getElementById("deliverySearch");
+        markFieldError(deliveryEl);
+        missingLabels.push("Delivery");
+        firstInvalid = deliveryEl;
+
+        showPopup(`⚠️ Please fill in all required fields: ${missingLabels.join(", ")}`);
+
+        if(firstInvalid && typeof firstInvalid.focus === "function"){
+            firstInvalid.focus();
+            firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        return;
+    }
+
+    // VALIDASI — semua field QC di bawah ini wajib diisi
+    const fields = [
+        { id: "lineStop", label: "Line Stop" },
+        { id: "ng",       label: "NG" },
+        { id: "rank",     label: "Rank" },
+        { id: "fppk",     label: "FPPK" },
+    ];
+
+    for(let f of fields){
+        const el = document.getElementById(f.id);
+        const val = el.value.trim();
+
+        if(!val){
+            markFieldError(el);
+            missingLabels.push(f.label);
+            if(!firstInvalid) firstInvalid = el;
+        }
+    }
+
+    const qcStatus =
+        document.querySelector(
+            'input[name="qc-problem-status"]:checked'
+        )?.value;
+
+    if(!qcStatus){
+        markRadioGroupError();
+        missingLabels.push("Quality Problem");
+        if(!firstInvalid) firstInvalid = document.getElementById("qc-has-problem");
+    }
+
+    if(missingLabels.length > 0){
+
+        showPopup(
+            `Please fill in all required fields ${missingLabels.join(", ")}`
+        );
+
+        if(firstInvalid && typeof firstInvalid.focus === "function"){
+            firstInvalid.focus();
+            firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
         return;
     }
 
     let qualityProblems = [];
-
-    const qcStatus =
-    document.querySelector(
-    'input[name="qc-problem-status"]:checked'
-    )?.value;
 
     if (qcStatus === "yes") {
 
@@ -559,7 +660,7 @@ async function saveQC(){
         qualityProblems = [];
 
     }
-    
+
     const payload = {
 
         docNumber:
@@ -610,12 +711,12 @@ async function saveQC(){
             ) || 0,
 
         has_problem:
-        qcStatus ?? "no",
+            qcStatus,
 
         qualityProblems:
             qualityProblems,
 
-        
+
 
         total_score:
             Number(
