@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('approval_histories', function (Blueprint $table) {
             $table->id();
             $table->string('doc_number');
-            $table->unsignedBigInteger('user_name');
+            $table->string('user_name');
             $table->string('action'); // approve / reject
             $table->integer('step');
             $table->text('note')->nullable();

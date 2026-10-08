@@ -9,7 +9,7 @@
 
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 6mm;
 }
 
 
@@ -37,7 +37,7 @@ body {
 
 .sheet-border {
     border: 1px solid #000;
-    padding: 6px 6px 15px 6px;
+    padding: 4px 6px 6px 6px;
     overflow: hidden;
 }
 
@@ -262,53 +262,52 @@ table{
 
 /* ================= GRADE TABLE ================= */
 
-.grade-table{
-    width:100%;
-    height:10px;
-    border-collapse:collapse;
+.grade-table {
+    width: 100% !important;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 0 !important;
 }
 
 .grade-table th,
-.grade-table td{
-    border:1px solid #000;
-    text-align:center;
-    padding:1px 2px !important;
-    font-size:7px !important;
-    line-height:1 !important;
+.grade-table td {
+    border: 1px solid #000;
+    text-align: center;
+    vertical-align: middle;
+    padding: 1.5px 2px !important;
+    font-size: 7px !important;
+    line-height: 1.2 !important;
+    height: 10.5px !important;
 }
 
-td[style*="width:50%"]{
-    border:none !important;
+.grade-table th {
+    font-weight: bold;
 }
+
 /* ================= CRITERIA TABLE ================= */
 
 .criteria-wrapper {
-    width: 100%;
+    width: 100% !important;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-top: 2px !important;
+    margin-top: 3px !important;
 }
 
-.criteria-wrapper > tbody > tr > td {
+.criteria-wrapper td {
     vertical-align: top;
     border: none !important;
     padding: 0 !important;
 }
 
-/* LEFT CRITERIA */
-.criteria-wrapper > tbody > tr > td:first-child {
-    width: 50%;
+.criteria-wrapper td.left-criteria-cell {
+    width: 50% !important;
+    padding-right: 3px !important;
+}
+
+.criteria-wrapper td.right-criteria-cell {
+    width: 50% !important;
     padding-left: 3px !important;
-    padding-right: 4px !important;
 }
-
-/* RIGHT CRITERIA */
-.criteria-wrapper > tbody > tr > td:last-child {
-    width: 50%;
-    padding-left: 4px !important;
-    padding-right: 0 !important;
-}
-
 
 .criteria-table {
     width: 100% !important;
@@ -317,261 +316,93 @@ td[style*="width:50%"]{
     margin: 0 !important;
 }
 
-
 .criteria-table th,
 .criteria-table td {
     border: 1px solid #000;
-
-    padding: 1px 2px !important;
-
-    font-size: 7px !important;
-
-    line-height: 1 !important;
-
-    height: auto !important;
-
+    text-align: center;
     vertical-align: middle;
-
     box-sizing: border-box;
 }
 
-
-.criteria-table th {
+/* LEFT QUALITY CRITERIA TABLE */
+.quality-criteria-table th {
     background: #00a8d8;
+    color: #000;
     font-weight: bold;
-    text-align: center;
+    font-size: 6.8px !important;
+    line-height: 1.15 !important;
+    padding: 1px 1px !important;
+    height: 22px !important;
 }
 
-
-.criteria-table td {
-    text-align: center;
+.quality-criteria-table td {
+    font-size: 6.2px !important;
+    line-height: 1.15 !important;
+    padding: 1px 2px !important;
+    height: 14.78px !important;
 }
 
-
-.criteria-table .left-text,
-.left-text {
+.quality-criteria-table .left-text {
     text-align: left !important;
+    padding-left: 3px !important;
 }
 
-.criteria-wrapper > tbody > tr > td:first-child .criteria-table {
-    width: calc(100% - 4px) !important;
+/* RIGHT DELIVERY CRITERIA TABLE */
+.delivery-table {
+    table-layout: fixed;
+    border-collapse: collapse;
 }
 
-/* ================= DELIVERY TABLE ================= */
-
-
-.delivery-table{
-    table-layout:fixed;
-    border-collapse:collapse;
-    word-wrap:break-word;
+.delivery-table th {
+    background: #ffc000;
+    color: #000;
+    font-weight: bold;
+    font-size: 6.2px !important;
+    line-height: 1.15 !important;
+    padding: 1px 1px !important;
+    height: 11px !important;
 }
 
-
-
-.delivery-table th,
-.delivery-table td{
-    border:1px solid #000;
-    text-align:center;
-    vertical-align:middle;
-    padding:1px !important;
-    font-size:6.5px !important;
-    line-height:1 !important;
-}
-
-
-
-.delivery-table th{
-    background:#ffc000;
-    font-weight:bold;
+.delivery-table td {
+    font-size: 6px !important;
+    line-height: 1.15 !important;
+    padding: 1px 1px !important;
+    height: 11.6px !important;
 }
 
 
+/* ================= UTILITY & SPACING ================= */
 
-/* ukuran kolom delivery */
-
-.delivery-table th:nth-child(1),
-.delivery-table td:nth-child(1){
-    width:5%;
+.header-table {
+    width: 100%;
+    table-layout: auto !important;
+    border-collapse: collapse;
 }
 
-
-
-.delivery-table th:nth-child(2),
-.delivery-table td:nth-child(2){
-    width:22%;
+.header-table td {
+    border: none;
+    vertical-align: middle;
 }
 
-
-
-.delivery-table th:nth-child(n+3),
-.delivery-table td:nth-child(n+3){
-    width:14.6%;
+table[style*="margin-top:5px"] {
+    margin-top: 2px !important;
 }
 
-
-
-/* ================= SPACING PDF ================= */
-
-
-.criteria-wrapper{
-    margin-top:1px !important;
-}
-
-
-table[style*="margin-top:5px"]{
-    margin-top:1px !important;
-}
-
-.header-table{
-    width:100%;
-    table-layout:auto !important;
-    border-collapse:collapse;
-}
-
-.header-table td{
-    border:none;
-    vertical-align:middle;
-}
-
-/* ================= FORCE CRITERIA SMALL ================= */
-
-
-/* area grade + criteria jangan kasih ruang */
 .grade-table,
 .criteria-wrapper,
-.criteria-table,
-.delivery-table{
-    margin:0 !important;
-    padding:0 !important;
+.delivery-table,
+.quality-criteria-table {
+    page-break-inside: avoid !important;
 }
 
-
-/* GRADE */
-.grade-table th,
-.grade-table td{
-    padding:0 !important;
-    font-size:6px !important;
-    line-height:7px !important;
-    height:7px !important;
-}
-
-
-/* CRITERIA KIRI KANAN */
-.criteria-wrapper td{
-    padding:0 !important;
-}
-
-
-.criteria-table{
-    width:100% !important;
-    table-layout:fixed !important;
-}
-
-
-.criteria-table th,
-.criteria-table td{
-
-    padding:0 !important;
-    font-size:5.5px !important;
-    line-height:6px !important;
-    height:6px !important;
-
-}
-
-
-/* header */
-.criteria-table th{
-    height:7px !important;
-}
-
-
-/* tulisan kiri */
-.left-text{
-    text-align:left !important;
-}
-
-
-/* Delivery criteria paling bawah */
-.delivery-table th,
-.delivery-table td{
-
-    padding:0 !important;
-    font-size:5px !important;
-    line-height:6px !important;
-    height:6px !important;
-
-}
-
-
-
-/* kecilkan jarak sebelum criteria */
-.criteria-wrapper{
-    margin-top:-2px !important;
-}
-
-
-/* paksa tidak pindah halaman */
-.grade-table,
-.criteria-wrapper,
-.delivery-table{
-    page-break-inside:avoid !important;
-}
-
-table{
-    table-layout:fixed;
+table {
+    table-layout: fixed;
 }
 
 td,
-th{
-    overflow-wrap:break-word;
-    word-break:break-word;
-}
-
-/* ================= FINAL TABLE SIZE ================= */
-
-/* GRADE */
-.grade-table th,
-.grade-table td{
-    padding:0 !important;
-    font-size:6.5px !important;
-    line-height:6px !important;
-    height:6px !important;
-}
-
-
-/* CRITERIA */
-.criteria-wrapper td{
-    padding:0 !important;
-}
-
-
-.criteria-table{
-    width:100% !important;
-    table-layout:fixed !important;
-}
-
-
-.criteria-table th,
-.criteria-table td{
-    padding:0 2px !important;
-    font-size:6.5px !important;
-    line-height:6px !important;
-    height:6px !important;
-}
-
-
-.criteria-table th{
-    height:7px !important;
-}
-
-
-/* DELIVERY CRITERIA */
-.delivery-table th,
-.delivery-table td{
-    padding:0 1px !important;
-    font-size:6px !important;
-    line-height:6px !important;
-    height:6px !important;
+th {
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 </style>
@@ -712,7 +543,7 @@ function parseProblemData($data)
 
 
 <!-- SPACE TANDA TANGAN -->
-<tr style="height:60px;">
+<tr style="height:45px;">
 
 
     <!-- GM -->
@@ -1579,12 +1410,12 @@ Nothing Problem
 
 {{-- ===================== LEGEND / GRADE TABLES ===================== --}}
 
-<table style="width:100%; border-collapse:collapse; margin-top:2px;">
+<table style="width:100%; border-collapse:collapse; margin-top:3px; table-layout:fixed;">
 <tr>
 
-<td style="width:50%; vertical-align:top; border:none;">
+<td style="width:50%; vertical-align:top; border:none; padding-right:3px;">
 
-    <table class="grade-table" style="width:100%;">
+    <table class="grade-table">
         <tr>
             <th colspan="2">QUALITY GRADE</th>
         </tr>
@@ -1617,9 +1448,9 @@ Nothing Problem
 
 </td>
 
-<td style="width:100%; vertical-align:top; border:none;">
+<td style="width:50%; vertical-align:top; border:none; padding-left:3px;">
 
-    <table class="grade-table" style="width:100%;">
+    <table class="grade-table">
         <tr>
             <th colspan="2">DELIVERY GRADE</th>
         </tr>
@@ -1653,354 +1484,231 @@ Nothing Problem
 </td>
 
 </tr>
+</table>
 
 {{-- ===================== CRITERIA SCORE ===================== --}}
 
-<table class="criteria-wrapper" style="width:100%; table-layout:fixed;">
+<table class="criteria-wrapper">
 <tr>
 
-<td style="width:50%; vertical-align:top;">
-<table class="criteria-table" style="width:100%; margin-top:0;">
+<td class="left-criteria-cell">
+    <table class="criteria-table quality-criteria-table">
+        <colgroup>
+            <col style="width:26%;">
+            <col style="width:14%;">
+            <col style="width:10%;">
+            <col style="width:26%;">
+            <col style="width:14%;">
+            <col style="width:10%;">
+        </colgroup>
 
+        <tr>
+            <th>KRITERIA</th>
+            <th>BOBOT</th>
+            <th>PRESENTASE</th>
 
-<tr>
-    <th>KRITERIA</th>
-    <th>BOBOT</th>
-    <th>PRESENTASE</th>
+            <th>KRITERIA</th>
+            <th>BOBOT</th>
+            <th>PRESENTASE</th>
+        </tr>
 
-    <th>KRITERIA</th>
-    <th>BOBOT</th>
-    <th>PRESENTASE</th>
-</tr>
+        <tr>
+            <td colspan="2"><b>LINE STOP</b></td>
+            <td rowspan="3">40%</td>
 
-<tr>
-    <td colspan="2"><b>LINE STOP</b></td>
-    <td rowspan="3">40%</td>
+            <td colspan="2"><b>RANK</b></td>
+            <td rowspan="4">25%</td>
+        </tr>
 
-    <td colspan="2"><b>RANK</b></td>
-    <td rowspan="4">25%</td>
-</tr>
+        <tr>
+            <td class="left-text">a.) YA</td>
+            <td>40 Point</td>
 
-<tr>
-    <td class="left-text">a.) YA</td>
-    <td>40 Point</td>
+            <td class="left-text">a.) A</td>
+            <td>25 Point</td>
+        </tr>
 
-    <td class="left-text">a.) A</td>
-    <td>25 Point</td>
-</tr>
+        <tr>
+            <td class="left-text">b.) TIDAK</td>
+            <td>0 Point</td>
 
-<tr>
-    <td class="left-text">b.) TIDAK</td>
-    <td>0 Point</td>
+            <td class="left-text">b.) B</td>
+            <td>10 Point</td>
+        </tr>
 
-    <td class="left-text">b.) B</td>
-    <td>10 Point</td>
-</tr>
+        <tr>
+            <td colspan="2"><b>PPM</b></td>
+            <td rowspan="5">15%</td>
 
-<tr>
-    <td colspan="2"><b>PPM</b></td>
-    <td rowspan="5">15%</td>
+            <td class="left-text">c.) C</td>
+            <td>5 Point</td>
+        </tr>
 
-    <td class="left-text">c.) C</td>
-    <td>5 Point</td>
-</tr>
+        <tr>
+            <td class="left-text">a.) ZERO PPM</td>
+            <td>0 Point</td>
 
-<tr>
-    <td class="left-text">a.) ZERO PPM</td>
-    <td>0 Point</td>
+            <td colspan="2"><b>FPPK REPLY</b></td>
+            <td rowspan="4">20%</td>
+        </tr>
 
-    <td colspan="2"><b>FPPK REPLY</b></td>
-    <td rowspan="4">20%</td>
-</tr>
+        <tr>
+            <td class="left-text">b.) 1 ~ 20 PPM (Target)</td>
+            <td>5 Point</td>
 
-<tr>
-    <td class="left-text">b.) 1 ~ 20 PPM (Target)</td>
-    <td>5 Point</td>
+            <td class="left-text">a.) On Time</td>
+            <td>0 Point</td>
+        </tr>
 
-    <td class="left-text">a.) On Time</td>
-    <td>0 Point</td>
-</tr>
+        <tr>
+            <td class="left-text">c.) 21 ~ 200 PPM</td>
+            <td>10 Point</td>
 
-<tr>
-    <td class="left-text">c.) 21 ~ 200 PPM</td>
-    <td>10 Point</td>
+            <td class="left-text">b.) Delay</td>
+            <td>10 Point</td>
+        </tr>
 
-    <td class="left-text">b.) Delay</td>
-    <td>10 Point</td>
-</tr>
+        <tr>
+            <td class="left-text">d.) &gt; 200 PPM</td>
+            <td>15 Point</td>
 
-<tr>
-    <td class="left-text">d.) > 200 PPM</td>
-    <td>15 Point</td>
+            <td class="left-text">c.) No Reply</td>
+            <td>20 Point</td>
+        </tr>
+    </table>
+</td>
 
-    <td class="left-text">c.) No Reply</td>
-    <td>20 Point</td>
-</tr>
+<td class="right-criteria-cell">
+    <table class="criteria-table delivery-table">
+        <colgroup>
+            <col style="width:6%;">
+            <col style="width:26%;">
+            <col style="width:10%;">
+            <col style="width:11.6%;">
+            <col style="width:11.6%;">
+            <col style="width:11.6%;">
+            <col style="width:11.6%;">
+            <col style="width:11.6%;">
+        </colgroup>
 
+        <tr>
+            <th rowspan="2">NO</th>
+            <th rowspan="2">VARIABEL</th>
+            <th colspan="6">GRADE</th>
+        </tr>
 
-</table>
+        <tr>
+            <th></th>
+            <th>95% - 100%</th>
+            <th>85 - 94%</th>
+            <th>75 - 84%</th>
+            <th>65 - 74%</th>
+            <th>&lt; 64%</th>
+        </tr>
 
+        <!-- QUANTITY -->
+        <tr>
+            <td rowspan="2">1</td>
+            <td rowspan="2">Quantity (Kesesuaian dengan DN)</td>
+            <td>%</td>
+            <td>95% - 100%</td>
+            <td>85 - 94%</td>
+            <td>75 - 84%</td>
+            <td>65 - 74%</td>
+            <td>&lt; 64%</td>
+        </tr>
+        <tr>
+            <td>Index</td>
+            <td>0</td>
+            <td>2</td>
+            <td>4</td>
+            <td>6</td>
+            <td>8</td>
+        </tr>
 
+        <!-- OTD -->
+        <tr>
+            <td rowspan="2">2</td>
+            <td rowspan="2">On-Time Delivery</td>
+            <td>Day</td>
+            <td>No Delay</td>
+            <td>Delay 1 day</td>
+            <td>Delay 2 days</td>
+            <td>Delay 3 days</td>
+            <td>Delay &gt; 3 days</td>
+        </tr>
+        <tr>
+            <td>Index</td>
+            <td>0</td>
+            <td>2</td>
+            <td>4</td>
+            <td>6</td>
+            <td>10</td>
+        </tr>
+
+        <!-- METHOD -->
+        <tr>
+            <td rowspan="2">3</td>
+            <td rowspan="2">Delivery method</td>
+            <td>Method</td>
+            <td>Normal</td>
+            <td>Abnormal</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Index</td>
+            <td>0</td>
+            <td>4</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <!-- PREMIUM -->
+        <tr>
+            <td rowspan="2">4</td>
+            <td rowspan="2">Premium Freight/Month</td>
+            <td>Rp</td>
+            <td>0</td>
+            <td>0 - Rp.500 rb</td>
+            <td>500 rb - Rp.1jt</td>
+            <td>1jt - Rp.3jt</td>
+            <td>&gt;3jt</td>
+        </tr>
+        <tr>
+            <td>Index</td>
+            <td>0</td>
+            <td>2</td>
+            <td>4</td>
+            <td>6</td>
+            <td>8</td>
+        </tr>
+
+        <!-- DPS -->
+        <tr>
+            <td rowspan="2">5</td>
+            <td rowspan="2">Delivery Problem Sheet(DPS) Reply</td>
+            <td>Reply</td>
+            <td>ON TIME</td>
+            <td>DELAY</td>
+            <td>NO REPLY</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Index</td>
+            <td>0</td>
+            <td>10</td>
+            <td>20</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
 </td>
 
 </tr>
-
-</table>
-
-<td style="width:50%; vertical-align:top;">
-<table class="criteria-table delivery-table">
-
-
-<tr>
-
-<th rowspan="2">NO</th>
-
-<th rowspan="2">VARIABEL</th>
-
-<th colspan="6">GRADE</th>
-
-</tr>
-
-
-<tr>
-
-<th></th>
-<th>95% - 100%</th>
-<th>85 - 94%</th>
-<th>75 - 84%</th>
-<th>65 - 74%</th>
-<th>&lt; 64%</th>
-
-</tr>
-
-
-
-<!-- QUANTITY -->
-
-<tr>
-
-<td rowspan="2">1</td>
-
-<td rowspan="2">
-Quantity (Kesesuaian dengan DN)
-</td>
-
-
-<td>%</td>
-<td>95% - 100%</td>
-<td>85 - 94%</td>
-<td>75 - 84%</td>
-<td>65 - 74%</td>
-<td>&lt; 64%</td>
-
-</tr>
-
-
-<tr>
-
-<td>Index</td>
-
-<td>0</td>
-
-<td>2</td>
-
-<td>4</td>
-
-<td>6</td>
-
-<td>8</td>
-
-</tr>
-
-
-
-
-
-<!-- OTD -->
-
-<tr>
-
-<td rowspan="2">2</td>
-
-<td rowspan="2">
-On-Time Delivery
-</td>
-
-
-<td>Day</td>
-
-<td>No Delay</td>
-
-<td>Delay 1 day</td>
-
-<td>Delay 2 days</td>
-
-<td>Delay 3 days</td>
-
-<td>Delay > 3 days</td>
-
-</tr>
-
-
-<tr>
-
-<td>Index</td>
-
-<td>0</td>
-
-<td>2</td>
-
-<td>4</td>
-
-<td>6</td>
-
-<td>10</td>
-
-</tr>
-
-
-
-
-
-
-<!-- METHOD -->
-
-<tr>
-
-<td rowspan="2">3</td>
-
-<td rowspan="2">
-Delivery method
-</td>
-
-
-<td>Method</td>
-
-<td>Normal</td>
-
-<td>Abnormal</td>
-
-<td></td>
-
-<td></td>
-
-<td></td>
-
-</tr>
-
-
-<tr>
-
-<td>Index</td>
-
-<td>0</td>
-
-<td>4</td>
-
-<td></td>
-
-<td></td>
-
-<td></td>
-
-</tr>
-
-
-
-
-
-
-<!-- PREMIUM -->
-
-<tr>
-
-<td rowspan="2">4</td>
-
-<td rowspan="2">
-Premium Freight/Month
-</td>
-
-
-<td>Rp</td>
-
-<td>0</td>
-
-<td>0 - Rp.500 rb</td>
-
-<td>500 rb - Rp.1jt</td>
-
-<td>1jt - Rp.3jt</td>
-
-<td>>3jt</td>
-
-</tr>
-
-
-<tr>
-
-<td>Index</td>
-
-<td>0</td>
-
-<td>2</td>
-
-<td>4</td>
-
-<td>6</td>
-
-<td>8</td>
-
-</tr>
-
-
-
-
-
-
-
-<!-- DPS -->
-
-<tr>
-
-<td rowspan="2">5</td>
-
-<td rowspan="2">
-Delivery Problem Sheet(DPS) Reply
-</td>
-
-
-<td>Reply</td>
-
-<td>ON TIME</td>
-
-<td>DELAY</td>
-
-<td>NO REPLY</td>
-
-<td></td>
-<td></td>
-
-</tr>
-
-
-
-<tr>
-
-<td>Index</td>
-
-<td>0</td>
-
-<td>10</td>
-
-<td>20</td>
-
-<td></td>
-<td></td>
-
-</tr>
-
-
-
 </table>
 
 </div>
