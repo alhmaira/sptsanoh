@@ -554,12 +554,12 @@ th{
     padding:2px 2px !important;
     font-size:6.5px !important;
     line-height:1.2 !important;
-    height:11px !important;
+    height:15px !important;
 }
 
 
 .criteria-table th{
-    height:12px !important;
+    height:18px !important;
 }
 
 
@@ -569,6 +569,10 @@ th{
     padding:2px 1px !important;
     font-size:6px !important;
     line-height:1.2 !important;
+    height:11px !important;
+}
+
+.delivery-table th{
     height:11px !important;
 }
 
