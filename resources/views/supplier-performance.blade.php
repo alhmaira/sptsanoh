@@ -266,7 +266,7 @@ table{
     width: 100% !important;
     border-collapse: collapse !important;
     table-layout: fixed !important;
-    margin-top: 4px !important;
+    margin-top: 6px !important;
 }
 
 .grade-wrapper > tr > td,
@@ -314,7 +314,7 @@ table{
     width: 100% !important;
     border-collapse: collapse !important;
     table-layout: fixed !important;
-    margin-top: 4px !important;
+    margin-top: 6px !important;
 }
 
 .criteria-wrapper > tr > td,
@@ -443,32 +443,10 @@ table{
 /* ================= SPACING PDF ================= */
 
 
-.criteria-wrapper{
-    margin-top:1px !important;
-}
-
-
-table[style*="margin-top:5px"]{
-    margin-top:1px !important;
-}
-
-.header-table{
-    width:100%;
-    table-layout:auto !important;
-    border-collapse:collapse;
-}
-
-.header-table td{
-    border:none;
-    vertical-align:middle;
-}
-
 /* ================= FORCE CRITERIA SMALL ================= */
-
 
 /* area grade + criteria jangan kasih ruang */
 .grade-table,
-.criteria-wrapper,
 .criteria-table,
 .delivery-table{
     margin:0 !important;
@@ -1615,7 +1593,7 @@ Nothing Problem
 
 {{-- ===================== LEGEND / GRADE TABLES ===================== --}}
 
-<table class="grade-wrapper" style="width:100%; border-collapse:collapse; table-layout:fixed; margin-top:4px;">
+<table class="grade-wrapper" style="width:100%; border-collapse:collapse; table-layout:fixed; margin-top:6px;">
 <tr>
 
 <td class="grade-col" style="width:50%; vertical-align:top; border:none; padding-right:4px;">
@@ -1693,7 +1671,7 @@ Nothing Problem
 
 {{-- ===================== CRITERIA SCORE ===================== --}}
 
-<table class="criteria-wrapper" style="width:100%; border-collapse:collapse; table-layout:fixed; margin-top:4px;">
+<table class="criteria-wrapper" style="width:100%; border-collapse:collapse; table-layout:fixed; margin-top:6px;">
 <tr>
 
 <td class="criteria-col" style="width:50%; vertical-align:top; border:none; padding-right:4px;">
