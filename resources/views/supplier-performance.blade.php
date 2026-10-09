@@ -538,8 +538,26 @@ th{
 
 
 /* CRITERIA */
-.criteria-wrapper td{
+.criteria-wrapper{
+    width:100% !important;
+    border-collapse:collapse !important;
+    table-layout:fixed !important;
+    margin-top:-2px !important;
+}
+
+.criteria-wrapper > tr > td,
+.criteria-wrapper > tbody > tr > td,
+.criteria-col{
+    vertical-align:top !important;
+    border:none !important;
     padding:0 !important;
+}
+
+.criteria-table td,
+.criteria-table th,
+.delivery-table td,
+.delivery-table th{
+    border:1px solid #000 !important;
 }
 
 
@@ -554,12 +572,12 @@ th{
     padding:2px 2px !important;
     font-size:6.5px !important;
     line-height:1.2 !important;
-    height:15px !important;
+    height:14.45px !important;
 }
 
 
 .criteria-table th{
-    height:18px !important;
+    height:22px !important;
 }
 
 
@@ -1655,13 +1673,14 @@ Nothing Problem
 </td>
 
 </tr>
+</table>
 
 {{-- ===================== CRITERIA SCORE ===================== --}}
 
 <table class="criteria-wrapper" style="width:100%; table-layout:fixed;">
 <tr>
 
-<td style="width:50%; vertical-align:top;">
+<td class="criteria-col" style="width:50%; vertical-align:top; border:none; padding-right:4px;">
 <table class="criteria-table" style="width:100%; margin-top:0;">
 
 
@@ -1745,11 +1764,7 @@ Nothing Problem
 
 </td>
 
-</tr>
-
-</table>
-
-<td style="width:50%; vertical-align:top;">
+<td class="criteria-col" style="width:50%; vertical-align:top; border:none; padding-left:4px;">
 <table class="criteria-table delivery-table">
 
 
@@ -2003,6 +2018,9 @@ Delivery Problem Sheet(DPS) Reply
 
 
 
+</table>
+</td>
+</tr>
 </table>
 
 </div>
