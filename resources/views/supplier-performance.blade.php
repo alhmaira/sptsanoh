@@ -569,6 +569,8 @@ th{
 
 .criteria-table th,
 .criteria-table td{
+    text-align:center !important;
+    vertical-align:middle !important;
     padding:2px 2px !important;
     font-size:6.5px !important;
     line-height:1.2 !important;
@@ -578,6 +580,10 @@ th{
 
 .criteria-table th{
     height:22px !important;
+}
+
+.criteria-table .left-text{
+    text-align:center !important;
 }
 
 
@@ -1703,18 +1709,18 @@ Nothing Problem
 </tr>
 
 <tr>
-    <td class="left-text">a.) YA</td>
+    <td>a.) YA</td>
     <td>40 Point</td>
 
-    <td class="left-text">a.) A</td>
+    <td>a.) A</td>
     <td>25 Point</td>
 </tr>
 
 <tr>
-    <td class="left-text">b.) TIDAK</td>
+    <td>b.) TIDAK</td>
     <td>0 Point</td>
 
-    <td class="left-text">b.) B</td>
+    <td>b.) B</td>
     <td>10 Point</td>
 </tr>
 
@@ -1722,12 +1728,12 @@ Nothing Problem
     <td colspan="2"><b>PPM</b></td>
     <td rowspan="5">15%</td>
 
-    <td class="left-text">c.) C</td>
+    <td>c.) C</td>
     <td>5 Point</td>
 </tr>
 
 <tr>
-    <td class="left-text">a.) ZERO PPM</td>
+    <td>a.) ZERO PPM</td>
     <td>0 Point</td>
 
     <td colspan="2"><b>FPPK REPLY</b></td>
@@ -1735,26 +1741,26 @@ Nothing Problem
 </tr>
 
 <tr>
-    <td class="left-text">b.) 1 ~ 20 PPM (Target)</td>
+    <td>b.) 1 ~ 20 PPM (Target)</td>
     <td>5 Point</td>
 
-    <td class="left-text">a.) On Time</td>
+    <td>a.) On Time</td>
     <td>0 Point</td>
 </tr>
 
 <tr>
-    <td class="left-text">c.) 21 ~ 200 PPM</td>
+    <td>c.) 21 ~ 200 PPM</td>
     <td>10 Point</td>
 
-    <td class="left-text">b.) Delay</td>
+    <td>b.) Delay</td>
     <td>10 Point</td>
 </tr>
 
 <tr>
-    <td class="left-text">d.) > 200 PPM</td>
+    <td>d.) > 200 PPM</td>
     <td>15 Point</td>
 
-    <td class="left-text">c.) No Reply</td>
+    <td>c.) No Reply</td>
     <td>20 Point</td>
 </tr>
 
