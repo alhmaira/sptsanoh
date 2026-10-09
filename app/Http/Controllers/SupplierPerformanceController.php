@@ -241,49 +241,54 @@ $qcPrepared = User::where('department','Quality Control')
                  ->where('role','Supervisor')
                  ->first();
 
-    $pdf = Pdf::loadView(
-        'Supplier-performance',
-        [
+    $viewData = [
+        'data' => $data,
+        'qcData' => $qcData,
+        'qualityTotal' => $qualityTotal,
+        'qualityGrade' => $qualityGrade,
+        'deliveryTotal' => $data->total_score ?? 0,
+        'deliveryGrade' => $data->performance_grade ?? 'A',
+        'qtyIdx' => 0,
+        'otdIdx' => $data->otd ?? 0,
+        'methodIdx' => $data->del_method ?? 0,
+        'premIdx' => 0,
+        'dpsIdx' => $data->dps ?? 0,
+        'gm' => $gm,
+        'purchChecked' => $purchChecked,
+        'purchPrepared' => $purchPrepared,
+        'ppicChecked' => $ppicChecked,
+        'ppicPrepared' => $ppicPrepared,
+        'qcChecked' => $qcChecked,
+        'qcPrepared' => $qcPrepared,
+    ];
 
-            'data'=>$data,
+    // ================= DYNAMIC AUTO-FIT HEIGHT =================
+    // Pass 1: Render pada kanvas virtual yang tinggi untuk mengukur batas bawah konten
+    $measurePdf = Pdf::loadView('Supplier-performance', $viewData);
+    $measurePdf->setPaper([0, 0, 612, 1400]);
+    $dompdf = $measurePdf->getDomPDF();
 
-            'qcData'=>$qcData,
-
-
-            'qualityTotal'=>$qualityTotal,
-
-            'qualityGrade'=>$qualityGrade,
-
-
-            'deliveryTotal'=>$data->total_score ?? 0,
-
-            'deliveryGrade'=>$data->performance_grade ?? 'A',
-
-
-            'qtyIdx'=>0,
-
-            'otdIdx'=>$data->otd ?? 0,
-
-            'methodIdx'=>$data->del_method ?? 0,
-
-            'premIdx'=>0,
-
-            'dpsIdx'=>$data->dps ?? 0,
-
-               // USER SIGNATURE
-            'gm'=>$gm,
-            'purchChecked'=>$purchChecked,
-            'purchPrepared'=>$purchPrepared,
-            'ppicChecked'=>$ppicChecked,
-            'ppicPrepared'=>$ppicPrepared,
-            'qcChecked'=>$qcChecked,
-            'qcPrepared'=>$qcPrepared,
-
-
+    $maxY = 0;
+    $dompdf->setCallbacks([
+        'measure_bounds' => [
+            'event' => 'end_frame',
+            'f' => function ($frame) use (&$maxY) {
+                $box = $frame->get_border_box();
+                $bottom = $box['y'] + $box['h'];
+                if ($bottom > $maxY) {
+                    $maxY = $bottom;
+                }
+            }
         ]
-    );
+    ]);
+    $dompdf->render();
 
-    $pdf->setPaper('legal', 'portrait');
+    // Hitung tinggi kertas pas: batas terbawah konten + margin bawah (5mm = 14.17pt) + buffer aman
+    $customHeight = ($maxY > 0) ? (int) ceil($maxY + 20) : 1008;
+
+    // Pass 2: Render final dengan tinggi kertas pas sesuai konten
+    $pdf = Pdf::loadView('Supplier-performance', $viewData);
+    $pdf->setPaper([0, 0, 612, $customHeight]);
 
     return $pdf->download(
         'supplier-performance-'.$docNumber.'.pdf'

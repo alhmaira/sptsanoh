@@ -8,7 +8,6 @@
         * { box-sizing:border-box; }
 
   @page {
-    size: legal portrait;
     margin: 5mm;
 }
 
