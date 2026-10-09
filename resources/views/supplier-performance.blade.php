@@ -8,8 +8,8 @@
         * { box-sizing:border-box; }
 
   @page {
-    size: A4 portrait;
-    margin: 10mm;
+    size: legal portrait;
+    margin: 5mm;
 }
 
 
@@ -37,7 +37,7 @@ body {
 
 .sheet-border {
     border: 1px solid #000;
-    padding: 6px 6px 15px 6px;
+    padding: 5px 6px 8px 6px;
     overflow: hidden;
 }
 
@@ -604,57 +604,59 @@ th{
 <body>
 
 @php
-function getSignatureImage($signature)
-{
-    if(!$signature){
-        return null;
+if (!function_exists('getSignatureImage')) {
+    function getSignatureImage($signature)
+    {
+        if(!$signature){
+            return null;
+        }
+
+        $filename = pathinfo($signature, PATHINFO_FILENAME);
+
+        $files = glob(storage_path('app/public/signatures/'.$filename.'.*'));
+
+        if(count($files) == 0){
+            return null;
+        }
+
+        $path = $files[0];
+
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+
+        $data = file_get_contents($path);
+
+        return 'data:image/'.$type.';base64,'.base64_encode($data);
     }
-
-    $filename = pathinfo($signature, PATHINFO_FILENAME);
-
-    $files = glob(storage_path('app/public/signatures/'.$filename.'.*'));
-
-    if(count($files) == 0){
-        return null;
-    }
-
-    $path = $files[0];
-
-    $type = pathinfo($path, PATHINFO_EXTENSION);
-
-    $data = file_get_contents($path);
-
-    return 'data:image/'.$type.';base64,'.base64_encode($data);
 }
 @endphp
 
 @php
+if (!function_exists('parseProblemData')) {
+    function parseProblemData($data)
+    {
+        if (empty($data)) {
+            return [];
+        }
 
-function parseProblemData($data)
-{
-    if (empty($data)) {
+        // Kalau sudah array
+        if (is_array($data)) {
+            return $data;
+        }
+
+        // Kalau JSON string
+        if (is_string($data)) {
+
+            $decoded = json_decode($data, true);
+
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        // Selalu return array supaya aman untuk count()
         return [];
     }
-
-    // Kalau sudah array
-    if (is_array($data)) {
-        return $data;
-    }
-
-    // Kalau JSON string
-    if (is_string($data)) {
-
-        $decoded = json_decode($data, true);
-
-        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-            return $decoded;
-        }
-    }
-
-    // Selalu return array supaya aman untuk count()
-    return [];
 }
-
 @endphp
 
 <div class="sheet">

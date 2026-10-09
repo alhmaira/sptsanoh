@@ -283,7 +283,7 @@ $qcPrepared = User::where('department','Quality Control')
         ]
     );
 
-
+    $pdf->setPaper('legal', 'portrait');
 
     return $pdf->download(
         'supplier-performance-'.$docNumber.'.pdf'
