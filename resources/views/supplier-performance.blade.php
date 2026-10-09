@@ -262,49 +262,82 @@ table{
 
 /* ================= GRADE TABLE ================= */
 
-.grade-table{
-    width:100%;
-    height:10px;
-    border-collapse:collapse;
+.grade-wrapper {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    margin-top: 4px !important;
+}
+
+.grade-wrapper > tr > td,
+.grade-wrapper > tbody > tr > td,
+.grade-col {
+    width: 50% !important;
+    vertical-align: top !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.grade-wrapper > tr > td:first-child,
+.grade-wrapper > tbody > tr > td:first-child,
+.grade-col:first-child {
+    padding-left: 0 !important;
+    padding-right: 4px !important;
+}
+
+.grade-wrapper > tr > td:last-child,
+.grade-wrapper > tbody > tr > td:last-child,
+.grade-col:last-child {
+    padding-left: 4px !important;
+    padding-right: 0 !important;
+}
+
+.grade-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
 }
 
 .grade-table th,
-.grade-table td{
-    border:1px solid #000;
-    text-align:center;
-    padding:1px 2px !important;
-    font-size:7px !important;
-    line-height:1 !important;
+.grade-table td {
+    border: 1px solid #000 !important;
+    text-align: center !important;
+    padding: 2px 2px !important;
+    font-size: 6.5px !important;
+    line-height: 1.2 !important;
+    height: 11px !important;
 }
 
-td[style*="width:50%"]{
-    border:none !important;
-}
 /* ================= CRITERIA TABLE ================= */
 
 .criteria-wrapper {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    margin-top: 2px !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    margin-top: 4px !important;
 }
 
-.criteria-wrapper > tbody > tr > td {
-    vertical-align: top;
+.criteria-wrapper > tr > td,
+.criteria-wrapper > tbody > tr > td,
+.criteria-col {
+    width: 50% !important;
+    vertical-align: top !important;
     border: none !important;
     padding: 0 !important;
 }
 
 /* LEFT CRITERIA */
-.criteria-wrapper > tbody > tr > td:first-child {
-    width: 50%;
-    padding-left: 3px !important;
+.criteria-wrapper > tr > td:first-child,
+.criteria-wrapper > tbody > tr > td:first-child,
+.criteria-col:first-child {
+    padding-left: 0 !important;
     padding-right: 4px !important;
 }
 
 /* RIGHT CRITERIA */
-.criteria-wrapper > tbody > tr > td:last-child {
-    width: 50%;
+.criteria-wrapper > tr > td:last-child,
+.criteria-wrapper > tbody > tr > td:last-child,
+.criteria-col:last-child {
     padding-left: 4px !important;
     padding-right: 0 !important;
 }
@@ -353,9 +386,6 @@ td[style*="width:50%"]{
     text-align: left !important;
 }
 
-.criteria-wrapper > tbody > tr > td:first-child .criteria-table {
-    width: calc(100% - 4px) !important;
-}
 
 /* ================= DELIVERY TABLE ================= */
 
@@ -504,13 +534,8 @@ table[style*="margin-top:5px"]{
 
 
 
-/* kecilkan jarak sebelum criteria */
-.criteria-wrapper{
-    margin-top:-2px !important;
-}
-
-
 /* paksa tidak pindah halaman */
+.grade-wrapper,
 .grade-table,
 .criteria-wrapper,
 .delivery-table{
@@ -534,23 +559,6 @@ th{
     font-size:6.5px !important;
     line-height:1.2 !important;
     height:11px !important;
-}
-
-
-/* CRITERIA */
-.criteria-wrapper{
-    width:100% !important;
-    border-collapse:collapse !important;
-    table-layout:fixed !important;
-    margin-top:-2px !important;
-}
-
-.criteria-wrapper > tr > td,
-.criteria-wrapper > tbody > tr > td,
-.criteria-col{
-    vertical-align:top !important;
-    border:none !important;
-    padding:0 !important;
 }
 
 .criteria-table td,
@@ -1607,10 +1615,10 @@ Nothing Problem
 
 {{-- ===================== LEGEND / GRADE TABLES ===================== --}}
 
-<table style="width:100%; border-collapse:collapse; margin-top:2px;">
+<table class="grade-wrapper" style="width:100%; border-collapse:collapse; table-layout:fixed; margin-top:4px;">
 <tr>
 
-<td style="width:50%; vertical-align:top; border:none;">
+<td class="grade-col" style="width:50%; vertical-align:top; border:none; padding-right:4px;">
 
     <table class="grade-table" style="width:100%;">
         <tr>
@@ -1645,7 +1653,7 @@ Nothing Problem
 
 </td>
 
-<td style="width:100%; vertical-align:top; border:none;">
+<td class="grade-col" style="width:50%; vertical-align:top; border:none; padding-left:4px;">
 
     <table class="grade-table" style="width:100%;">
         <tr>
@@ -1685,7 +1693,7 @@ Nothing Problem
 
 {{-- ===================== CRITERIA SCORE ===================== --}}
 
-<table class="criteria-wrapper" style="width:100%; table-layout:fixed;">
+<table class="criteria-wrapper" style="width:100%; border-collapse:collapse; table-layout:fixed; margin-top:4px;">
 <tr>
 
 <td class="criteria-col" style="width:50%; vertical-align:top; border:none; padding-right:4px;">
